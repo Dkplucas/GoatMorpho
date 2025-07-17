@@ -1,10 +1,15 @@
+from django.conf import settings
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator, MaxValueValidator
 
 
 class Measurement(models.Model):
-    """Model for goat morphometric measurements"""
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='measurements'
+    )
     
     STATUS_CHOICES = [
         ('processing', 'Processing'),
