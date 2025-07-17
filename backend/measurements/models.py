@@ -16,7 +16,6 @@ class Measurement(models.Model):
     ]
     
     # File information
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='measurements')
     image = models.ImageField(upload_to='measurements/')
     original_name = models.CharField(max_length=255)
     file_size = models.IntegerField()
