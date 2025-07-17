@@ -10,7 +10,6 @@ class Measurement(models.Model):
         on_delete=models.CASCADE,
         related_name='measurements'
     )
-    
     STATUS_CHOICES = [
         ('processing', 'Processing'),
         ('completed', 'Completed'),
