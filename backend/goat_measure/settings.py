@@ -1,5 +1,5 @@
 """
-Django settings for goat_measure project in production.
+Django settings for goat_measure project in production1.
 """
 
 import os
