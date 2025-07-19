@@ -134,8 +134,8 @@ FILE_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024  # 10MB
 DATA_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024  # 10MB
 
 # Celery configuration (for background tasks)
-CELERY_BROKER_URL = config('CELERY_BROKER_URL', default='redis://localhost:6379/0')
-CELERY_RESULT_BACKEND = config('CELERY_RESULT_BACKEND', default='redis://localhost:6379/0')
+CELERY_BROKER_URL = 'redis://10.0.1.25:6379/0'
+CELERY_RESULT_BACKEND = 'redis://10.0.1.25:6379/0'
 
 # HTTPS Settings
 SECURE_SSL_REDIRECT = True
