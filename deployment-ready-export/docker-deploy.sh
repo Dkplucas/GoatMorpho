@@ -26,13 +26,13 @@ check_prerequisites() {
     if ! command -v docker compose &> /dev/null; then
         log_error "Docker Compose is not installed. Please install Docker Compose first."
         exit 1
-    }
+    
 
     # Check if .env file exists
     if [ ! -f .env ]; then
         log_error ".env file not found. Please create one from .env.example"
         exit 1
-    }
+    
 
     # Check if required directories exist
     for dir in "frontend" "backend" "nginx/conf.d" "certbot"; do
@@ -87,25 +87,25 @@ check_health() {
     if ! docker compose exec db pg_isready -U goatuser -d goatmeasure &> /dev/null; then
         log_error "Database is not ready"
         return 1
-    }
+    
 
     # Check Redis
     if ! docker compose exec redis redis-cli ping &> /dev/null; then
         log_error "Redis is not ready"
         return 1
-    }
+    
 
     # Check backend API
     if ! curl -f http://localhost:8000/health/ &> /dev/null; then
         log_error "Backend API is not responding"
         return 1
-    }
+    
 
     # Check frontend
     if ! curl -f http://localhost &> /dev/null; then
         log_error "Frontend is not responding"
         return 1
-    }
+    fi  # Added missing fi
 
     return 0
 }
