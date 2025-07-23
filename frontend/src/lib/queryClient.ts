@@ -1,5 +1,5 @@
-import { QueryClient, QueryFunction } from "@tanstack/react-query";
-import type { ApiResponse, ApiError } from "../shared/types";
+import { QueryClient } from "@tanstack/react-query";
+import type { ApiError } from "../shared/types";
 
 interface ApiRequestConfig<TData = unknown> {
   method?: "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
@@ -10,6 +10,15 @@ interface ApiRequestConfig<TData = unknown> {
   signal?: AbortSignal;
 }
 
+export const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 1,
+      staleTime: 5 * 60 * 1000,
+      cacheTime: 10 * 60 * 1000,
+    },
+  },
+});
 export async function apiRequest<TResponse, TData = unknown>(
   endpoint: string,
   config: ApiRequestConfig<TData> = {}

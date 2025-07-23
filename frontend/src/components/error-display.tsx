@@ -3,11 +3,11 @@ import { Button } from "@/components/ui/button";
 import { AlertTriangle, XCircle } from "lucide-react";
 
 interface ErrorDisplayProps {
-  error: string;
-  onRetry: () => void;
+  error: string[];
+  className?: string;
 }
 
-export default function ErrorDisplay({ error, onRetry }: ErrorDisplayProps) {
+export default function ErrorDisplay({ error, className }: ErrorDisplayProps) {
   // Parse error message to extract individual issues
   const parseErrorMessage = (errorMsg: string) => {
     // Check if it's a JSON error response with multiple errors
@@ -19,16 +19,20 @@ export default function ErrorDisplay({ error, onRetry }: ErrorDisplayProps) {
     } catch {
       // Not JSON, treat as single error
     }
-    
+
     // Check for common quality issues
-    if (errorMsg.includes('resolution') || errorMsg.includes('blurry') || errorMsg.includes('visible')) {
+    if (
+      errorMsg.includes("resolution") ||
+      errorMsg.includes("blurry") ||
+      errorMsg.includes("visible")
+    ) {
       return [
-        'Image resolution too low for accurate measurements',
-        'Goat not fully visible in frame',
-        'Image too blurry for feature detection'
+        "Image resolution too low for accurate measurements",
+        "Goat not fully visible in frame",
+        "Image too blurry for feature detection",
       ];
     }
-    
+
     return [errorMsg];
   };
 
@@ -45,7 +49,10 @@ export default function ErrorDisplay({ error, onRetry }: ErrorDisplayProps) {
           <div className="space-y-2 text-sm text-red-700">
             {errorList.map((issue, index) => (
               <div key={index} className="flex items-start">
-                <XCircle className="text-red-500 mr-2 mt-0.5 flex-shrink-0" size={16} />
+                <XCircle
+                  className="text-red-500 mr-2 mt-0.5 flex-shrink-0"
+                  size={16}
+                />
                 <span>{issue}</span>
               </div>
             ))}

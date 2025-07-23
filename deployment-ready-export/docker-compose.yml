@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    ports:
+      - "80:5000"  # Map port 80 to container port 5000
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=postgresql://goatuser:${POSTGRES_PASSWORD:-goatpass123}@db:5432/goatmeasure
+      - PORT=5000
+      - CORS_ORIGIN=http://goatmorpho.info,https://goatmorpho.info
+    volumes:
+      - uploads_data:/app/uploads
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - goat_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  db:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_DB=goatmeasure
+      - POSTGRES_USER=goatuser
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-goatpass123}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U goatuser -d goatmeasure"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - goat_network
+
+volumes:
+  postgres_data:
+    driver: local
+  uploads_data:
+    driver: local
+
+networks:
+  goat_network:
+    driver: bridge
