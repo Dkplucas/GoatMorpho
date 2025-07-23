@@ -53,7 +53,7 @@ export default function Home() {
         {/* Error Display */}
         {uploadError && (
           <section className="mb-8">
-            <ErrorDisplay error={uploadError} onRetry={handleReset} />
+            <div className="alert alert-danger">{uploadError as string}</div>
           </section>
         )}
         {/* Preview Section */}

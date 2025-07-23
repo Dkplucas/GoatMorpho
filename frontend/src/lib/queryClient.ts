@@ -1,57 +1,63 @@
 import { QueryClient, QueryFunction } from "@tanstack/react-query";
+import type { ApiResponse, ApiError } from "../shared/types";
 
-async function throwIfResNotOk(res: Response) {
-  if (!res.ok) {
-    const text = (await res.text()) || res.statusText;
-    throw new Error(`${res.status}: ${text}`);
-  }
+interface ApiRequestConfig<TData = unknown> {
+  method?: "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
+  data?: TData;
+  headers?: Record<string, string>;
+  credentials?: RequestCredentials;
+  cache?: RequestCache;
+  signal?: AbortSignal;
 }
 
-export async function apiRequest(
-  method: string,
-  url: string,
-  data?: unknown | undefined,
-): Promise<Response> {
-  const res = await fetch(url, {
-    method,
-    headers: data ? { "Content-Type": "application/json" } : {},
-    body: data ? JSON.stringify(data) : undefined,
-    credentials: "include",
-  });
+export async function apiRequest<TResponse, TData = unknown>(
+  endpoint: string,
+  config: ApiRequestConfig<TData> = {}
+): Promise<TResponse> {
+  const url = endpoint.startsWith("http") ? endpoint : `/api${endpoint}`;
+  const token = localStorage.getItem("authToken");
 
-  await throwIfResNotOk(res);
-  return res;
-}
-
-type UnauthorizedBehavior = "returnNull" | "throw";
-export const getQueryFn: <T>(options: {
-  on401: UnauthorizedBehavior;
-}) => QueryFunction<T> =
-  ({ on401: unauthorizedBehavior }) =>
-  async ({ queryKey }) => {
-    const res = await fetch(queryKey.join("/") as string, {
-      credentials: "include",
-    });
-
-    if (unauthorizedBehavior === "returnNull" && res.status === 401) {
-      return null;
-    }
-
-    await throwIfResNotOk(res);
-    return await res.json();
+  const headers: Record<string, string> = {
+    Accept: "application/json",
+    ...config.headers,
+    ...(config.data ? { "Content-Type": "application/json" } : {}),
+    ...(token ? { Authorization: `Token ${token}` } : {}),
   };
 
-export const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      queryFn: getQueryFn({ on401: "throw" }),
-      refetchInterval: false,
-      refetchOnWindowFocus: false,
-      staleTime: Infinity,
-      retry: false,
-    },
-    mutations: {
-      retry: false,
-    },
-  },
-});
+  try {
+    const res = await fetch(url, {
+      method: config.method || "GET",
+      headers,
+      body: config.data ? JSON.stringify(config.data) : undefined,
+      credentials: config.credentials || "include",
+      cache: config.cache || "no-cache",
+      signal: config.signal,
+    });
+
+    if (!res.ok) {
+      const errorData = await res.json().catch(() => ({
+        message: res.statusText,
+      }));
+
+      const error: ApiError = {
+        message: errorData.message || `HTTP error ${res.status}`,
+        status: res.status,
+        errors: errorData.errors,
+      };
+
+      throw error;
+    }
+
+    // Handle empty responses
+    if (res.status === 204) {
+      return {} as TResponse;
+    }
+
+    return await res.json();
+  } catch (error) {
+    if (error instanceof Error) {
+      throw error;
+    }
+    throw new Error("An unexpected error occurred");
+  }
+}

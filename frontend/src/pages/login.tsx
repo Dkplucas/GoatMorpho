@@ -1,3 +1,4 @@
+import { AuthResponse } from "@/shared/types";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -51,7 +52,7 @@ export default function LoginPage({ onLoginSuccess }: LoginPageProps) {
     setError(null);
 
     try {
-      const response = await apiRequest("/api/auth/login", {
+      const response = await apiRequest<AuthResponse>("/api/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -59,7 +60,7 @@ export default function LoginPage({ onLoginSuccess }: LoginPageProps) {
         body: JSON.stringify(data),
       });
 
-      if (response.success) {
+      if ((response as AuthResponse).success) {
         toast({
           title: "Login successful",
           description: "Welcome to GoatMeasure Pro!",
@@ -67,7 +68,8 @@ export default function LoginPage({ onLoginSuccess }: LoginPageProps) {
         onLoginSuccess();
       }
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : "Login failed";
+      const errorMessage =
+        error instanceof Error ? error.message : "Login failed";
       setError(errorMessage);
       toast({
         title: "Login failed",
@@ -79,12 +81,13 @@ export default function LoginPage({ onLoginSuccess }: LoginPageProps) {
     }
   };
 
+  // Handle user registration
   const handleRegister = async (data: RegisterFormData) => {
     setIsLoading(true);
     setError(null);
 
     try {
-      const response = await apiRequest("/api/auth/register", {
+      const response = await apiRequest<AuthResponse>("/api/auth/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -92,17 +95,20 @@ export default function LoginPage({ onLoginSuccess }: LoginPageProps) {
         body: JSON.stringify(data),
       });
 
-      if (response.success) {
+      if ((response as AuthResponse).success) {
         toast({
           title: "Registration successful",
           description: "Account created successfully! You can now log in.",
         });
         // Switch to login tab
-        const loginTab = document.querySelector('[data-value="login"]') as HTMLElement;
+        const loginTab = document.querySelector(
+          '[data-value="login"]'
+        ) as HTMLElement;
         loginTab?.click();
       }
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : "Registration failed";
+      const errorMessage =
+        error instanceof Error ? error.message : "Registration failed";
       setError(errorMessage);
       toast({
         title: "Registration failed",
@@ -125,23 +131,32 @@ export default function LoginPage({ onLoginSuccess }: LoginPageProps) {
             </div>
           </div>
           <h1 className="text-3xl font-bold text-agri-gray">GoatMeasure Pro</h1>
-          <p className="text-gray-600 mt-2">Professional morphometric analysis for livestock management</p>
+          <p className="text-gray-600 mt-2">
+            Professional morphometric analysis for livestock management
+          </p>
         </div>
 
         <Card className="shadow-lg">
           <CardHeader>
-            <CardTitle className="text-center text-agri-gray">Welcome</CardTitle>
+            <CardTitle className="text-center text-agri-gray">
+              Welcome
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <Tabs defaultValue="login" className="w-full">
               <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="login" data-value="login">Login</TabsTrigger>
+                <TabsTrigger value="login" data-value="login">
+                  Login
+                </TabsTrigger>
                 <TabsTrigger value="register">Register</TabsTrigger>
               </TabsList>
 
               {/* Login Tab */}
               <TabsContent value="login" className="space-y-4">
-                <form onSubmit={loginForm.handleSubmit(handleLogin)} className="space-y-4">
+                <form
+                  onSubmit={loginForm.handleSubmit(handleLogin)}
+                  className="space-y-4"
+                >
                   <div className="space-y-2">
                     <Label htmlFor="login-username">Username</Label>
                     <Input
@@ -197,7 +212,10 @@ export default function LoginPage({ onLoginSuccess }: LoginPageProps) {
 
               {/* Register Tab */}
               <TabsContent value="register" className="space-y-4">
-                <form onSubmit={registerForm.handleSubmit(handleRegister)} className="space-y-4">
+                <form
+                  onSubmit={registerForm.handleSubmit(handleRegister)}
+                  className="space-y-4"
+                >
                   <div className="space-y-2">
                     <Label htmlFor="register-username">Username</Label>
                     <Input
@@ -258,7 +276,8 @@ export default function LoginPage({ onLoginSuccess }: LoginPageProps) {
         <div className="mt-6 text-center">
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
             <p className="text-sm text-blue-700">
-              <strong>Demo Mode:</strong> Create an account or login to start analyzing goat images for morphometric measurements.
+              <strong>Demo Mode:</strong> Create an account or login to start
+              analyzing goat images for morphometric measurements.
             </p>
           </div>
         </div>
