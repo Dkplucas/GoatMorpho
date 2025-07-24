@@ -5,18 +5,18 @@ WORKDIR /app
 # Copy package files
 COPY package*.json ./
 
-# Install dependencies
-RUN npm ci
+# Generate package-lock.json and install dependencies
+RUN npm install && \
+    npm ci && \
+    npm cache clean --force
 
 # Copy source code
 COPY . .
 
-# Create index.html if it doesn't exist
-RUN echo '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>GoatMorpho</title></head><body><div id="root"></div><script type="module" src="/src/main.jsx"></script></body></html>' > index.html
-
 # Build the application
 RUN npm run build
 
+# Production stage
 FROM nginx:alpine AS production
 
 # Copy built assets from builder
