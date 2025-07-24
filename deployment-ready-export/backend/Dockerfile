@@ -1,5 +1,4 @@
-# Base Python image
-FROM python:3.12-slim-bullseye as base
+FROM python:3.12-slim-bullseye as production
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
