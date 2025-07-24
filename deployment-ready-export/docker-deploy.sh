@@ -23,16 +23,19 @@ check_prerequisites() {
     fi
 
     # Check Docker Compose
+    # Note: 'docker compose' (with a space) is for Docker Compose V2.
+    # If using Docker Compose V1 (which is 'docker-compose' as a separate command),
+    # this check might need adjustment or a fallback.
     if ! command -v docker compose &> /dev/null; then
-        log_error "Docker Compose is not installed. Please install Docker Compose first."
+        log_error "Docker Compose (V2) is not installed. Please install Docker Compose first."
         exit 1
-    
+    fi
 
     # Check if .env file exists
     if [ ! -f .env ]; then
         log_error ".env file not found. Please create one from .env.example"
         exit 1
-    
+    fi
 
     # Check if required directories exist
     for dir in "frontend" "backend" "nginx/conf.d" "certbot"; do
@@ -87,25 +90,25 @@ check_health() {
     if ! docker compose exec db pg_isready -U goatuser -d goatmeasure &> /dev/null; then
         log_error "Database is not ready"
         return 1
-    
+    fi # Added missing fi
 
     # Check Redis
     if ! docker compose exec redis redis-cli ping &> /dev/null; then
         log_error "Redis is not ready"
         return 1
-    
+    fi # Added missing fi
 
     # Check backend API
     if ! curl -f http://localhost:8000/health/ &> /dev/null; then
         log_error "Backend API is not responding"
         return 1
-    
+    fi # Added missing fi
 
     # Check frontend
     if ! curl -f http://localhost &> /dev/null; then
         log_error "Frontend is not responding"
         return 1
-    fi  # Added missing fi
+    fi
 
     return 0
 }
@@ -132,11 +135,11 @@ main() {
 
     # Show helpful commands
     echo -e "\n📚 Useful commands:"
-    echo "  View logs:     docker compose logs -f"
-    echo "  Restart:       docker compose restart"
-    echo "  Stop:         docker compose down"
-    echo "  Update:       git pull && ./docker-deploy.sh"
-    echo "  View status:  docker compose ps"
+    echo "  View logs:      docker compose logs -f"
+    echo "  Restart:        docker compose restart"
+    echo "  Stop:           docker compose down"
+    echo "  Update:         git pull && ./docker-deploy.sh"
+    echo "  View status:    docker compose ps"
 }
 
 # Run main function
