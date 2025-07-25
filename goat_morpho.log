@@ -199,3 +199,10 @@ MediaPipe processing completed
 Initial pose detection failed, trying with enhanced contrast...
 Pose detection failed, trying face detection fallback...
 Using default scale factor (measurements will be in pixels)
+MediaPipe initialized successfully
+Processing uploaded image: images.jpeg, size: 9262
+Image decoded successfully. Shape: (225, 225, 3)
+MediaPipe processing completed
+Extracted 17 keypoints
+Calculated 7 measurements
+Error creating Excel export: 'MorphometricMeasurement' object has no attribute 'longueur_du_corps'
