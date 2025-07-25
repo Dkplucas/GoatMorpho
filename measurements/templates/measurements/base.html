@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      GoatMorpho - {% block title %}Goat Morphometric Analysis{% endblock %}
+    </title>
+
+    <!-- Favicon -->
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="{% static 'images/favicon.ico' %}"
+    />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="{% static 'images/goat_logo.svg' %}"
+    />
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      .measurement-card {
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 15px;
+        margin: 10px 0;
+      }
+      .goat-image {
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
+      }
+      .keypoint-overlay {
+        position: relative;
+        display: inline-block;
+      }
+      .confidence-badge {
+        font-size: 0.8em;
+      }
+      .navbar-brand img {
+        filter: brightness(1.1);
+        transition: transform 0.2s ease;
+      }
+      .navbar-brand:hover img {
+        transform: scale(1.05);
+      }
+      footer img {
+        opacity: 0.7;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+      <div class="container">
+        <a
+          class="navbar-brand d-flex align-items-center"
+          href="{% url 'measurements:home' %}"
+        >
+          <img
+            src="{% static 'images/goat_logo.svg' %}"
+            alt="GoatMorpho Logo"
+            height="32"
+            class="me-2"
+          />
+          GoatMorpho
+        </a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav me-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'measurements:home' %}">Home</a>
+            </li>
+            {% if user.is_authenticated %}
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'measurements:dashboard' %}"
+                >Dashboard</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'measurements:upload_image' %}"
+                >Upload Image</a
+              >
+            </li>
+            {% endif %}
+          </ul>
+          <ul class="navbar-nav">
+            {% if user.is_authenticated %}
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                id="navbarDropdown"
+                role="button"
+                data-bs-toggle="dropdown"
+              >
+                <i class="fas fa-user-circle"></i> {{
+                user.first_name|default:user.username }}
+              </a>
+              <ul class="dropdown-menu">
+                <li>
+                  <a
+                    class="dropdown-item"
+                    href="{% url 'measurements:profile' %}"
+                  >
+                    <i class="fas fa-user"></i> My Profile
+                  </a>
+                </li>
+                <li>
+                  <a
+                    class="dropdown-item"
+                    href="{% url 'measurements:export_options' %}"
+                  >
+                    <i class="fas fa-file-excel"></i> Export Data
+                  </a>
+                </li>
+                <li><hr class="dropdown-divider" /></li>
+                <li>
+                  <a class="dropdown-item" href="/admin/">
+                    <i class="fas fa-cog"></i> Admin
+                  </a>
+                </li>
+                <li><hr class="dropdown-divider" /></li>
+                <li>
+                  <a
+                    class="dropdown-item"
+                    href="{% url 'measurements:logout_confirm' %}"
+                  >
+                    <i class="fas fa-sign-out-alt"></i> Logout (with
+                    confirmation)
+                  </a>
+                </li>
+                <li>
+                  <a
+                    class="dropdown-item"
+                    href="{% url 'logout' %}"
+                    onclick="return confirm('Are you sure you want to log out?')"
+                  >
+                    <i class="fas fa-door-open"></i> Quick Logout
+                  </a>
+                </li>
+              </ul>
+            </li>
+            {% else %}
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'login' %}">
+                <i class="fas fa-sign-in-alt"></i> Login
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'measurements:register' %}">
+                <i class="fas fa-user-plus"></i> Register
+              </a>
+            </li>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <main class="container mt-4">
+      {% if messages %} {% for message in messages %}
+      <div
+        class="alert alert-{{ message.tags }} alert-dismissible fade show"
+        role="alert"
+      >
+        {{ message }}
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="alert"
+        ></button>
+      </div>
+      {% endfor %} {% endif %} {% block content %} {% endblock %}
+    </main>
+
+    <footer class="bg-light text-center text-muted py-4 mt-5">
+      <div class="container">
+        <div class="d-flex justify-content-center align-items-center mb-2">
+          <img
+            src="{% static 'images/goat_logo.svg' %}"
+            alt="GoatMorpho Logo"
+            height="24"
+            class="me-2"
+          />
+          <span>GoatMorpho</span>
+        </div>
+        <p class="mb-0">
+          &copy; 2025 GoatMorpho - Automated Goat Morphometric Analysis
+        </p>
+      </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    {% block extra_js %}{% endblock %}
+  </body>
+</html>

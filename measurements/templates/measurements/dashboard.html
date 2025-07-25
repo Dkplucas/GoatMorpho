@@ -1,0 +1,160 @@
+{% extends 'measurements/base.html' %} {% block title %}Dashboard{% endblock %}
+{% block content %}
+<div class="row">
+  <div class="col-md-12">
+    <h1>Goat Morphometric Analysis Dashboard</h1>
+    <p class="lead">
+      Automated measurement extraction from goat images using computer vision
+    </p>
+  </div>
+</div>
+
+<div class="row mb-4">
+  <div class="col-md-3">
+    <div class="card bg-primary text-white">
+      <div class="card-body">
+        <h5 class="card-title">Total Goats</h5>
+        <h2>{{ total_goats }}</h2>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card bg-success text-white">
+      <div class="card-body">
+        <h5 class="card-title">Total Measurements</h5>
+        <h2>{{ total_measurements }}</h2>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card bg-info text-white">
+      <div class="card-body">
+        <h5 class="card-title">Upload New</h5>
+        <a href="{% url 'measurements:upload_image' %}" class="btn btn-light">
+          📤 Upload Image
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card bg-warning text-dark">
+      <div class="card-body">
+        <h5 class="card-title">Quick Actions</h5>
+        <a href="/admin/" class="btn btn-dark btn-sm">Admin Panel</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-6">
+    <h3>Your Goats</h3>
+    {% if goats %}
+    <div class="list-group">
+      {% for goat in goats %}
+      <div
+        class="list-group-item d-flex justify-content-between align-items-center"
+      >
+        <div>
+          <h6 class="mb-1">{{ goat.name|default:"Unnamed Goat" }}</h6>
+          <small class="text-muted">
+            {% if goat.breed %}{{ goat.breed }} • {% endif %}{% if goat.sex %}{{
+            goat.get_sex_display }} • {% endif %}{{ goat.measurements.count }}
+            measurement{{ goat.measurements.count|pluralize }}
+          </small>
+        </div>
+        <span class="badge bg-primary rounded-pill">
+          {{ goat.created_at|date:"M d" }}
+        </span>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="alert alert-info">
+      <h5>No goats yet!</h5>
+      <p>
+        Start by
+        <a href="{% url 'measurements:upload_image' %}"
+          >uploading your first goat image</a
+        >
+        for analysis.
+      </p>
+    </div>
+    {% endif %}
+  </div>
+
+  <div class="col-md-6">
+    <h3>Recent Measurements</h3>
+    {% if recent_measurements %}
+    <div class="list-group">
+      {% for measurement in recent_measurements %}
+      <div class="list-group-item">
+        <div class="d-flex w-100 justify-content-between">
+          <h6 class="mb-1">
+            {{ measurement.goat.name|default:"Unnamed Goat" }}
+          </h6>
+          <small>{{ measurement.measurement_date|date:"M d, Y" }}</small>
+        </div>
+        <p class="mb-1">
+          Method:
+          <span
+            class="badge bg-{% if measurement.measurement_method == 'AUTO' %}success{% elif measurement.measurement_method == 'HYBRID' %}warning{% else %}secondary{% endif %}"
+          >
+            {{ measurement.get_measurement_method_display }}
+          </span>
+          {% if measurement.confidence_score %} • Confidence: {{
+          measurement.confidence_score|floatformat:1 }} {% endif %}
+        </p>
+        <small class="text-muted">
+          {% if measurement.hauteur_au_garrot %}WH: {{
+          measurement.hauteur_au_garrot }}cm{% endif %} {% if
+          measurement.body_length %} • BL: {{ measurement.body_length }}cm{%
+          endif %}
+        </small>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="alert alert-info">
+      <h5>No measurements yet!</h5>
+      <p>Upload a goat image to start measuring!</p>
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+<div class="row mt-4">
+  <div class="col-md-12">
+    <h3>About Morphometric Measurements</h3>
+    <div class="row">
+      <div class="col-md-4">
+        <h5>Height Measurements</h5>
+        <ul class="list-unstyled">
+          <li><strong>WH:</strong> Wither Height (Hauteur au garrot)</li>
+          <li><strong>BH:</strong> Back Height (Hauteur au dos)</li>
+          <li><strong>SH:</strong> Sternum Height (Hauteur au sternum)</li>
+          <li><strong>RH:</strong> Rump Height (Hauteur au sacrum)</li>
+        </ul>
+      </div>
+      <div class="col-md-4">
+        <h5>Length & Width</h5>
+        <ul class="list-unstyled">
+          <li><strong>BL:</strong> Body Length</li>
+          <li><strong>HL:</strong> Head Length (Longueur de la tête)</li>
+          <li><strong>HW:</strong> Head Width (Largeur de la tête)</li>
+          <li><strong>EL:</strong> Ear Length (Longueur oreille)</li>
+        </ul>
+      </div>
+      <div class="col-md-4">
+        <h5>Circumferences</h5>
+        <ul class="list-unstyled">
+          <li><strong>HG:</strong> Heart Girth (Tour de poitrine)</li>
+          <li><strong>CC:</strong> Chest Circumference</li>
+          <li><strong>AG:</strong> Abdominal Girth</li>
+          <li><strong>NG:</strong> Neck Girth (Tour du cou)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

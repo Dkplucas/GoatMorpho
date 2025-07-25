@@ -1,0 +1,45 @@
+<!-- Goat Logo SVG - Orange goat silhouette with leaves -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <!-- Black background circle -->
+  <circle cx="100" cy="100" r="95" fill="#000000" stroke="#333" stroke-width="2"/>
+  
+  <!-- Decorative leaves -->
+  <path d="M50 70 Q45 65 40 70 Q35 75 40 80 Q45 85 50 80 Q55 75 50 70 Z" fill="#4CAF50"/>
+  <path d="M160 75 Q165 70 170 75 Q175 80 170 85 Q165 90 160 85 Q155 80 160 75 Z" fill="#4CAF50"/>
+  <path d="M75 45 Q70 40 65 45 Q60 50 65 55 Q70 60 75 55 Q80 50 75 45 Z" fill="#2E7D32"/>
+  <path d="M140 50 Q145 45 150 50 Q155 55 150 60 Q145 65 140 60 Q135 55 140 50 Z" fill="#2E7D32"/>
+  
+  <!-- Goat silhouette -->
+  <!-- Head and ears -->
+  <ellipse cx="100" cy="85" rx="25" ry="22" fill="#FF8C00"/>
+  <ellipse cx="85" cy="75" rx="8" ry="12" fill="#FF8C00"/> <!-- Left ear -->
+  <ellipse cx="115" cy="75" rx="8" ry="12" fill="#FF8C00"/> <!-- Right ear -->
+  
+  <!-- Body -->
+  <ellipse cx="100" cy="130" rx="35" ry="45" fill="#FF8C00"/>
+  
+  <!-- Legs -->
+  <rect x="80" y="165" width="8" height="25" fill="#FF8C00"/>
+  <rect x="92" y="165" width="8" height="25" fill="#FF8C00"/>
+  <rect x="105" y="165" width="8" height="25" fill="#FF8C00"/>
+  <rect x="117" y="165" width="8" height="25" fill="#FF8C00"/>
+  
+  <!-- Horns -->
+  <path d="M92 70 L88 60 L90 58 L94 68 Z" fill="#8B4513"/>
+  <path d="M108 70 L112 60 L110 58 L106 68 Z" fill="#8B4513"/>
+  
+  <!-- Beard -->
+  <ellipse cx="100" cy="102" rx="4" ry="8" fill="#FF8C00"/>
+  
+  <!-- Eyes -->
+  <circle cx="95" cy="82" r="2" fill="#FFFFFF"/>
+  <circle cx="105" cy="82" r="2" fill="#FFFFFF"/>
+  <circle cx="95" cy="82" r="1" fill="#000000"/>
+  <circle cx="105" cy="82" r="1" fill="#000000"/>
+  
+  <!-- Nose -->
+  <ellipse cx="100" cy="88" rx="2" ry="1" fill="#D2691E"/>
+  
+  <!-- Tail -->
+  <ellipse cx="125" cy="140" rx="3" ry="8" fill="#FF8C00" transform="rotate(30 125 140)"/>
+</svg>

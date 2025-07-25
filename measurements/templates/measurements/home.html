@@ -1,0 +1,108 @@
+{% extends 'measurements/base.html' %}
+
+{% block title %}Welcome to GoatMorpho{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <h1 class="display-4 mb-4">GoatMorpho</h1>
+            <p class="lead mb-4">
+                Automated Goat Morphometric Measurement System
+            </p>
+            <p class="mb-4">
+                Upload goat images and get precise morphometric measurements using computer vision and machine learning.
+            </p>
+        </div>
+    </div>
+
+    <div class="row mt-5">
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-upload fa-3x text-primary mb-3"></i>
+                    <h5 class="card-title">Upload Images</h5>
+                    <p class="card-text">
+                        Upload high-quality goat images for automated morphometric analysis.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-ruler fa-3x text-success mb-3"></i>
+                    <h5 class="card-title">Automated Measurements</h5>
+                    <p class="card-text">
+                        AI-powered computer vision extracts precise morphometric measurements automatically.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-chart-bar fa-3x text-info mb-3"></i>
+                    <h5 class="card-title">Track Results</h5>
+                    <p class="card-text">
+                        View and manage your measurement results with detailed statistics and analysis.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-5">
+        <div class="col-md-12 text-center">
+            {% if user.is_authenticated %}
+                <h3>Welcome back, {{ user.first_name|default:user.username }}!</h3>
+                <div class="mt-3">
+                    <a href="{% url 'measurements:dashboard' %}" class="btn btn-primary btn-lg me-3">
+                        <i class="fas fa-tachometer-alt me-2"></i>Go to Dashboard
+                    </a>
+                    <a href="{% url 'measurements:upload_image' %}" class="btn btn-success btn-lg">
+                        <i class="fas fa-upload me-2"></i>Upload Image
+                    </a>
+                </div>
+            {% else %}
+                <h3>Get Started Today</h3>
+                <p class="mb-4">Join GoatMorpho to start measuring your goats with precision.</p>
+                <div class="mt-3">
+                    <a href="{% url 'login' %}" class="btn btn-primary btn-lg me-3">
+                        <i class="fas fa-sign-in-alt me-2"></i>Login
+                    </a>
+                    <a href="{% url 'measurements:register' %}" class="btn btn-outline-primary btn-lg">
+                        <i class="fas fa-user-plus me-2"></i>Register
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="row mt-5">
+        <div class="col-md-12">
+            <h3 class="text-center mb-4">Morphometric Measurements</h3>
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>Height Measurements</h5>
+                    <ul>
+                        <li><strong>WH:</strong> Wither Height (Hauteur au garrot)</li>
+                        <li><strong>BH:</strong> Back Height (Hauteur au dos)</li>
+                        <li><strong>SH:</strong> Sternum Height (Hauteur au sternum)</li>
+                        <li><strong>RH:</strong> Rump Height (Hauteur au sacrum)</li>
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <h5>Body Measurements</h5>
+                    <ul>
+                        <li><strong>BL:</strong> Body Length</li>
+                        <li><strong>HG:</strong> Heart Girth (Tour de poitrine)</li>
+                        <li><strong>CC:</strong> Chest Circumference</li>
+                        <li><strong>AG:</strong> Abdominal Girth</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

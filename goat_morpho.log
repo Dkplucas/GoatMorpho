@@ -1,0 +1,201 @@
+MediaPipe initialized successfully
+Processing uploaded image: goat7.jpg, size: 31032
+Image decoded successfully. Shape: (612, 603, 3)
+MediaPipe processing completed
+No pose landmarks detected
+MediaPipe initialized successfully
+Processing uploaded image: goat7.jpg, size: 31032
+Image decoded successfully. Shape: (612, 603, 3)
+MediaPipe processing completed
+No pose landmarks detected
+MediaPipe initialized successfully
+Processing uploaded image: olivier.jpg, size: 22175
+Image decoded successfully. Shape: (460, 612, 3)
+MediaPipe processing completed
+No pose landmarks detected
+MediaPipe initialized successfully
+Processing uploaded image: goat-farm-2026860.webp, size: 68294
+Image decoded successfully. Shape: (532, 800, 3)
+MediaPipe processing completed
+No pose landmarks detected
+MediaPipe initialized successfully
+Processing uploaded image: goat-farm-2026860.webp, size: 68294
+Image decoded successfully. Shape: (532, 800, 3)
+MediaPipe processing completed
+No pose landmarks detected
+MediaPipe initialized successfully
+Initial pose detection failed, trying with enhanced contrast...
+Pose detection failed, trying face detection fallback...
+Initial pose detection failed, trying with enhanced contrast...
+Pose detection failed, trying face detection fallback...
+MediaPipe initialized successfully
+Processing uploaded image: goat-farm-2026860.webp, size: 68294
+Image decoded successfully. Shape: (532, 800, 3)
+MediaPipe processing completed
+Initial pose detection failed, trying with enhanced contrast...
+Pose detection failed, trying face detection fallback...
+MediaPipe initialized successfully
+Processing uploaded image: olivier.jpg, size: 22175
+Image decoded successfully. Shape: (460, 612, 3)
+MediaPipe processing completed
+Initial pose detection failed, trying with enhanced contrast...
+Pose detection failed, trying face detection fallback...
+MediaPipe initialized successfully
+Processing uploaded image: Boerbok.jpg, size: 70043
+Image decoded successfully. Shape: (450, 600, 3)
+MediaPipe processing completed
+Initial pose detection failed, trying with enhanced contrast...
+Pose detection failed, trying face detection fallback...
+Error creating Excel export: 'MorphometricMeasurement' object has no attribute 'longueur_du_corps'
+Error creating Excel export: 'MorphometricMeasurement' object has no attribute 'longueur_du_corps'
+Error creating Excel export: 'Goat' object has no attribute 'birth_date'
+Error creating Excel export: 'Goat' object has no attribute 'birth_date'
+MediaPipe initialized successfully
+Processing uploaded image: goat-farm-2026860.webp, size: 68294
+Image decoded successfully. Shape: (532, 800, 3)
+MediaPipe processing completed
+Initial pose detection failed, trying with enhanced contrast...
+Pose detection failed, trying face detection fallback...
+MediaPipe initialized successfully
+Processing uploaded image: Goat-850.jpg, size: 554020
+Image decoded successfully. Shape: (1200, 1600, 3)
+Resized image to: 1440x1080
+MediaPipe processing completed
+Initial pose detection failed, trying with enhanced contrast...
+Pose detection failed, trying face detection fallback...
+MediaPipe initialized successfully
+Processing uploaded image: Goat-850.jpg, size: 554020
+Image decoded successfully. Shape: (1200, 1600, 3)
+Resized image to: 1440x1080
+MediaPipe processing completed
+Initial pose detection failed, trying with enhanced contrast...
+Pose detection failed, trying face detection fallback...
+MediaPipe initialized successfully
+Processing uploaded image: Boerbok.jpg, size: 70043
+Image decoded successfully. Shape: (450, 600, 3)
+MediaPipe processing completed
+Initial pose detection failed, trying with enhanced contrast...
+Pose detection failed, trying face detection fallback...
+MediaPipe initialized successfully
+Processing uploaded image: b2.jpg, size: 59379
+Image decoded successfully. Shape: (360, 486, 3)
+MediaPipe processing completed
+Initial pose detection failed, trying with enhanced contrast...
+Pose detection failed, trying face detection fallback...
+MediaPipe initialized successfully
+Processing uploaded image: b2.jpg, size: 59379
+Image decoded successfully. Shape: (360, 486, 3)
+MediaPipe processing completed
+Initial pose detection failed, trying with enhanced contrast...
+Pose detection failed, trying face detection fallback...
+ML dependencies not available, using traditional CV only
+Processing uploaded image: b2.jpg, size: 59379
+Image decoded successfully. Shape: (360, 486, 3)
+MediaPipe processing completed
+Initial pose detection failed, trying with enhanced contrast...
+Pose detection failed, trying face detection fallback...
+Error in fallback detection: 'GoatMorphometryProcessor' object has no attribute 'face_detection'
+ML dependencies not available, using traditional CV only
+Processing uploaded image: images.jpeg, size: 9262
+Image decoded successfully. Shape: (225, 225, 3)
+MediaPipe processing completed
+Error in measurement calculation: 'GoatMorphometryProcessor' object has no attribute 'goat_keypoints'
+ML dependencies not available, using traditional CV only
+Processing uploaded image: GvyzisAWgAA43IM.jpg, size: 208702
+Image decoded successfully. Shape: (984, 1200, 3)
+MediaPipe processing completed
+Initial pose detection failed, trying with enhanced contrast...
+Pose detection failed, trying face detection fallback...
+Error in fallback detection: 'GoatMorphometryProcessor' object has no attribute 'face_detection'
+ML dependencies not available, using traditional CV only
+Processing uploaded image: GvyzisAWgAA43IM.jpg, size: 208702
+Image decoded successfully. Shape: (984, 1200, 3)
+MediaPipe processing completed
+Initial pose detection failed, trying with enhanced contrast...
+Pose detection failed, trying face detection fallback...
+Error in fallback detection: 'GoatMorphometryProcessor' object has no attribute 'face_detection'
+ML dependencies not available, using traditional CV only
+Processing uploaded image: po.jpeg, size: 8401
+Image decoded successfully. Shape: (200, 252, 3)
+MediaPipe processing completed
+Initial pose detection failed, trying with enhanced contrast...
+Pose detection failed, trying face detection fallback...
+Error in fallback detection: 'GoatMorphometryProcessor' object has no attribute 'face_detection'
+ML dependencies not available, using traditional CV only
+Processing uploaded image: Boerbok.jpg, size: 70043
+Image decoded successfully. Shape: (450, 600, 3)
+MediaPipe processing completed
+Initial pose detection failed, trying with enhanced contrast...
+Pose detection failed, trying face detection fallback...
+Error in fallback detection: 'GoatMorphometryProcessor' object has no attribute 'face_detection'
+ML dependencies not available, using traditional CV only
+Processing uploaded image: Boerbok.jpg, size: 70043
+Image decoded successfully. Shape: (450, 600, 3)
+MediaPipe processing completed
+Initial pose detection failed, trying with enhanced contrast...
+Pose detection failed, trying face detection fallback...
+Error in fallback detection: 'GoatMorphometryProcessor' object has no attribute 'face_detection'
+ML dependencies not available, using traditional CV only
+Processing uploaded image: Boerbok.jpg, size: 70043
+Image decoded successfully. Shape: (450, 600, 3)
+MediaPipe processing completed
+Initial pose detection failed, trying with enhanced contrast...
+Pose detection failed, trying face detection fallback...
+Error in fallback detection: 'GoatMorphometryProcessor' object has no attribute 'face_detection'
+MediaPipe initialized successfully
+ML dependencies not available, using traditional CV only
+Processing uploaded image: Boerbok.jpg, size: 70043
+Image decoded successfully. Shape: (450, 600, 3)
+MediaPipe processing completed
+Initial pose detection failed, trying with enhanced contrast...
+Pose detection failed, trying face detection fallback...
+MediaPipe initialized successfully
+ML dependencies not available, using traditional CV only
+Processing uploaded image: Boerbok.jpg, size: 70043
+Image decoded successfully. Shape: (450, 600, 3)
+MediaPipe processing completed
+Initial pose detection failed, trying with enhanced contrast...
+Pose detection failed, trying face detection fallback...
+MediaPipe initialized successfully
+ML dependencies not available, using traditional CV only
+Processing uploaded image: Boerbok.jpg, size: 70043
+Image decoded successfully. Shape: (450, 600, 3)
+MediaPipe processing completed
+Initial pose detection failed, trying with enhanced contrast...
+Pose detection failed, trying face detection fallback...
+MediaPipe initialized successfully
+ML dependencies not available, using traditional CV only
+Processing uploaded image: Boerbok.jpg, size: 70043
+Image decoded successfully. Shape: (450, 600, 3)
+MediaPipe processing completed
+Initial pose detection failed, trying with enhanced contrast...
+Pose detection failed, trying face detection fallback...
+MediaPipe initialized successfully
+ML dependencies not available, using traditional CV only
+Processing uploaded image: Boerbok.jpg, size: 70043
+Image decoded successfully. Shape: (450, 600, 3)
+MediaPipe processing completed
+Initial pose detection failed, trying with enhanced contrast...
+Pose detection failed, trying face detection fallback...
+MediaPipe initialized successfully
+ML dependencies not available, using traditional CV only
+Processing uploaded image: po.jpeg, size: 8401
+Image decoded successfully. Shape: (200, 252, 3)
+MediaPipe processing completed
+Initial pose detection failed, trying with enhanced contrast...
+Pose detection failed, trying face detection fallback...
+MediaPipe initialized successfully
+ML dependencies not available, using traditional CV only
+Processing uploaded image: GvyzisAWgAA43IM.jpg, size: 208702
+Image decoded successfully. Shape: (984, 1200, 3)
+MediaPipe processing completed
+Initial pose detection failed, trying with enhanced contrast...
+Pose detection failed, trying face detection fallback...
+MediaPipe initialized successfully
+ML dependencies not available, using traditional CV only
+Processing uploaded image: GvyzisAWgAA43IM.jpg, size: 208702
+Image decoded successfully. Shape: (984, 1200, 3)
+MediaPipe processing completed
+Initial pose detection failed, trying with enhanced contrast...
+Pose detection failed, trying face detection fallback...
+Using default scale factor (measurements will be in pixels)

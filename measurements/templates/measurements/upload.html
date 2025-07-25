@@ -1,0 +1,321 @@
+{% extends 'measurements/base.html' %} {% block title %}Upload Goat Image{%
+endblock %} {% block content %}
+<div class="row">
+  <div class="col-md-8 offset-md-2">
+    <h1>Upload Goat Image for Analysis</h1>
+    <p class="lead">
+      Upload a clear side-view image of a goat for automated morphometric
+      measurement extraction.
+    </p>
+
+    <div class="card">
+      <div class="card-body">
+        <form id="uploadForm" enctype="multipart/form-data">
+          {% csrf_token %}
+
+          <div class="mb-3">
+            <label for="goatSelect" class="form-label"
+              >Select Existing Goat (Optional)</label
+            >
+            <select class="form-select" id="goatSelect" name="goat_id">
+              <option value="">Create new goat from image</option>
+              {% for goat in goats %}
+              <option value="{{ goat.id }}">
+                {{ goat.name|default:"Unnamed Goat" }}{% if goat.breed %} - {{
+                goat.breed }}{% endif %}
+              </option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="mb-3" id="newGoatName" style="display: block">
+            <label for="goatName" class="form-label"
+              >Goat Name (for new goat)</label
+            >
+            <input
+              type="text"
+              class="form-control"
+              id="goatName"
+              name="goat_name"
+              placeholder="Enter goat name"
+            />
+          </div>
+
+          <div class="mb-3">
+            <label for="imageFile" class="form-label">Goat Image</label>
+            <input
+              type="file"
+              class="form-control"
+              id="imageFile"
+              name="image"
+              accept="image/*"
+              required
+            />
+            <div class="form-text">
+              For best results, use a clear side-view image with the entire goat
+              visible.
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="referenceLength" class="form-label"
+              >Reference Object Length (Optional)</label
+            >
+            <div class="input-group">
+              <input
+                type="number"
+                class="form-control"
+                id="referenceLength"
+                name="reference_length_cm"
+                step="0.1"
+                placeholder="e.g., 50"
+              />
+              <span class="input-group-text">cm</span>
+            </div>
+            <div class="form-text">
+              If there's a known object in the image for scale reference (e.g.,
+              measuring tape, ruler).
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <div class="form-check">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                id="agreeTerms"
+                required
+              />
+              <label class="form-check-label" for="agreeTerms">
+                I confirm this image is of a goat and I have permission to
+                upload it for analysis.
+              </label>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary" id="submitBtn">
+            <span id="submitText">🔍 Analyze Image</span>
+            <span id="loadingText" style="display: none">
+              <span
+                class="spinner-border spinner-border-sm"
+                role="status"
+              ></span>
+              Processing...
+            </span>
+          </button>
+          <a href="{% url 'measurements:dashboard' %}" class="btn btn-secondary"
+            >Cancel</a
+          >
+        </form>
+      </div>
+    </div>
+
+    <!-- Preview area -->
+    <div id="imagePreview" class="mt-4" style="display: none">
+      <h5>Image Preview</h5>
+      <img id="previewImg" class="img-fluid goat-image" alt="Goat preview" />
+    </div>
+
+    <!-- Results area -->
+    <div id="resultsArea" class="mt-4" style="display: none">
+      <h3>Analysis Results</h3>
+      <div id="resultsContent"></div>
+    </div>
+  </div>
+</div>
+
+<div class="row mt-4">
+  <div class="col-md-12">
+    <h3>Tips for Better Results</h3>
+    <div class="row">
+      <div class="col-md-6">
+        <h5>📸 Image Quality</h5>
+        <ul>
+          <li>Use a clear, high-resolution image</li>
+          <li>Ensure good lighting</li>
+          <li>Side view is preferred</li>
+          <li>Entire goat should be visible</li>
+        </ul>
+      </div>
+      <div class="col-md-6">
+        <h5>📏 Measurement Accuracy</h5>
+        <ul>
+          <li>Include a reference object for scale</li>
+          <li>Goat should be standing naturally</li>
+          <li>Minimize background clutter</li>
+          <li>Review and correct AI measurements if needed</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %} {% block extra_js %}
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const goatSelect = document.getElementById("goatSelect");
+    const newGoatNameDiv = document.getElementById("newGoatName");
+    const imageFile = document.getElementById("imageFile");
+    const previewDiv = document.getElementById("imagePreview");
+    const previewImg = document.getElementById("previewImg");
+    const uploadForm = document.getElementById("uploadForm");
+    const submitBtn = document.getElementById("submitBtn");
+    const submitText = document.getElementById("submitText");
+    const loadingText = document.getElementById("loadingText");
+    const resultsArea = document.getElementById("resultsArea");
+    const resultsContent = document.getElementById("resultsContent");
+
+    // Show/hide new goat name input based on selection
+    goatSelect.addEventListener("change", function () {
+      if (this.value) {
+        newGoatNameDiv.style.display = "none";
+      } else {
+        newGoatNameDiv.style.display = "block";
+      }
+    });
+
+    // Image preview
+    imageFile.addEventListener("change", function (e) {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          previewImg.src = e.target.result;
+          previewDiv.style.display = "block";
+        };
+        reader.readAsDataURL(file);
+      } else {
+        previewDiv.style.display = "none";
+      }
+    });
+
+    // Form submission
+    uploadForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const formData = new FormData(this);
+
+      // Show loading state
+      submitBtn.disabled = true;
+      submitText.style.display = "none";
+      loadingText.style.display = "inline";
+      resultsArea.style.display = "none";
+
+      fetch("/api/upload/", {
+        method: "POST",
+        body: formData,
+        headers: {
+          "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]")
+            .value,
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          // Reset button state
+          submitBtn.disabled = false;
+          submitText.style.display = "inline";
+          loadingText.style.display = "none";
+
+          if (data.success) {
+            // Display results
+            displayResults(data);
+            resultsArea.style.display = "block";
+
+            // Reset form
+            uploadForm.reset();
+            previewDiv.style.display = "none";
+            newGoatNameDiv.style.display = "block";
+          } else {
+            alert("Error: " + data.error);
+          }
+        })
+        .catch((error) => {
+          // Reset button state
+          submitBtn.disabled = false;
+          submitText.style.display = "inline";
+          loadingText.style.display = "none";
+
+          console.error("Error:", error);
+          alert("An error occurred while processing the image.");
+        });
+    });
+
+    function displayResults(data) {
+      const measurement = data.measurement;
+      const goat = data.goat;
+      const processingInfo = data.processing_info;
+
+      let html = `
+            <div class="alert alert-success">
+                <h5>✅ Analysis Complete!</h5>
+                <p>Successfully processed image for <strong>${
+                  goat.name
+                }</strong></p>
+                <p>Confidence Score: <span class="badge bg-${
+                  processingInfo.confidence_score > 0.7
+                    ? "success"
+                    : processingInfo.confidence_score > 0.5
+                    ? "warning"
+                    : "danger"
+                }">${(processingInfo.confidence_score * 100).toFixed(
+        1
+      )}%</span></p>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>Detected Measurements</h5>
+                    <table class="table table-sm">
+                        <tbody>
+        `;
+
+      // Add measurements to table
+      const measurements = [
+        ["Wither Height (WH)", measurement.hauteur_au_garrot],
+        ["Body Length (BL)", measurement.body_length],
+        ["Head Length (HL)", measurement.longueur_tete],
+        ["Head Width (HW)", measurement.largeur_tete],
+        ["Chest Width (CW)", measurement.largeur_poitrine],
+        ["Hip Width (RW)", measurement.largeur_hanche],
+        ["Neck Length (NL)", measurement.longueur_cou],
+      ];
+
+      measurements.forEach(([name, value]) => {
+        if (value) {
+          html += `<tr><td>${name}</td><td>${value} cm</td></tr>`;
+        }
+      });
+
+      html += `
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-md-6">
+                    <h5>Processing Info</h5>
+                    <ul class="list-unstyled">
+                        <li><strong>Method:</strong> ${
+                          measurement.measurement_method
+                        }</li>
+                        <li><strong>Keypoints Detected:</strong> ${
+                          processingInfo.keypoints_detected
+                        }</li>
+                        <li><strong>Scale Factor:</strong> ${processingInfo.scale_factor.toFixed(
+                          2
+                        )}</li>
+                        <li><strong>Measurement ID:</strong> ${
+                          measurement.id
+                        }</li>
+                    </ul>
+                    <a href="/admin/measurements/morphometricmeasurement/${
+                      measurement.id
+                    }/change/" class="btn btn-sm btn-outline-primary">
+                        Edit in Admin
+                    </a>
+                </div>
+            </div>
+        `;
+
+      resultsContent.innerHTML = html;
+    }
+  });
+</script>
+{% endblock %}

@@ -1,0 +1,237 @@
+{% extends 'measurements/base.html' %} {% block title %}Register - GoatMorpho{%
+endblock %} {% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-8">
+    <div class="card">
+      <div class="card-header bg-primary text-white">
+        <h3 class="text-center mb-0">
+          <i class="fas fa-user-plus"></i> Join GoatMorpho
+        </h3>
+      </div>
+      <div class="card-body">
+        <p class="text-center text-muted mb-4">
+          Create your account with just a username and password to start
+          measuring goat morphometry
+        </p>
+
+        {% if form.errors %}
+        <div class="alert alert-danger">
+          <h4>
+            <i class="fas fa-exclamation-triangle"></i> Registration Failed
+          </h4>
+          <ul class="mb-0">
+            {% for field, errors in form.errors.items %} {% for error in errors
+            %}
+            <li>{{ field|capfirst }}: {{ error }}</li>
+            {% endfor %} {% endfor %}
+          </ul>
+        </div>
+        {% endif %}
+
+        <form method="post" novalidate>
+          {% csrf_token %}
+
+          <div class="mb-3">
+            <label for="{{ form.username.id_for_label }}" class="form-label">
+              <i class="fas fa-user"></i> Username *
+            </label>
+            {{ form.username }}
+            <div class="form-text">
+              Choose a unique username (minimum 3 characters)
+            </div>
+            {% if form.username.errors %}
+            <div class="text-danger small">{{ form.username.errors.0 }}</div>
+            {% endif %}
+          </div>
+
+          <div class="row">
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label
+                  for="{{ form.password1.id_for_label }}"
+                  class="form-label"
+                >
+                  <i class="fas fa-lock"></i> Password *
+                </label>
+                {{ form.password1 }} {% if form.password1.errors %}
+                <div class="text-danger small">
+                  {{ form.password1.errors.0 }}
+                </div>
+                {% endif %}
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label
+                  for="{{ form.password2.id_for_label }}"
+                  class="form-label"
+                >
+                  <i class="fas fa-lock"></i> Confirm Password *
+                </label>
+                {{ form.password2 }} {% if form.password2.errors %}
+                <div class="text-danger small">
+                  {{ form.password2.errors.0 }}
+                </div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+
+          <div class="d-grid">
+            <button type="submit" class="btn btn-primary btn-lg">
+              <i class="fas fa-user-plus"></i> Create Account
+            </button>
+          </div>
+        </form>
+
+        <div class="text-center mt-4">
+          <p class="text-muted">
+            Already have an account?
+            <a href="{% url 'login' %}" class="text-decoration-none">
+              <i class="fas fa-sign-in-alt"></i> Login here
+            </a>
+          </p>
+
+          <p class="text-muted">
+            <a
+              href="{% url 'measurements:home' %}"
+              class="text-decoration-none"
+            >
+              <i class="fas fa-home"></i> Back to Home
+            </a>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Features Overview -->
+    <div class="card mt-4">
+      <div class="card-body">
+        <h5 class="card-title text-center">
+          <i class="fas fa-star text-warning"></i> Why Join GoatMorpho?
+        </h5>
+        <div class="row text-center">
+          <div class="col-md-4">
+            <i
+              class="fas fa-camera text-primary mb-2"
+              style="font-size: 2rem"
+            ></i>
+            <h6>AI-Powered Analysis</h6>
+            <small class="text-muted"
+              >Upload photos and get accurate measurements automatically</small
+            >
+          </div>
+          <div class="col-md-4">
+            <i
+              class="fas fa-file-excel text-success mb-2"
+              style="font-size: 2rem"
+            ></i>
+            <h6>Excel Export</h6>
+            <small class="text-muted"
+              >Export your data for research and analysis</small
+            >
+          </div>
+          <div class="col-md-4">
+            <i
+              class="fas fa-chart-line text-info mb-2"
+              style="font-size: 2rem"
+            ></i>
+            <h6>Track Progress</h6>
+            <small class="text-muted">Monitor goat growth over time</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Terms Modal -->
+<div class="modal fade" id="termsModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Terms of Service</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <h6>1. Acceptance of Terms</h6>
+        <p>By using GoatMorpho, you agree to these terms and conditions.</p>
+
+        <h6>2. Use of Service</h6>
+        <p>
+          GoatMorpho is provided for research and educational purposes. Users
+          are responsible for ensuring image data compliance with local
+          regulations.
+        </p>
+
+        <h6>3. Data Privacy</h6>
+        <p>
+          We protect your data according to our Privacy Policy. Images are
+          processed securely and stored only with your consent.
+        </p>
+
+        <h6>4. Accuracy</h6>
+        <p>
+          While we strive for accuracy, measurements are estimates. For critical
+          decisions, verify with manual measurements.
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Privacy Modal -->
+<div class="modal fade" id="privacyModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Privacy Policy</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <h6>Information We Collect</h6>
+        <p>
+          We collect account information (name, email) and uploaded images for
+          measurement processing.
+        </p>
+
+        <h6>How We Use Information</h6>
+        <p>
+          Your data is used solely for providing measurement services. Images
+          are processed and can be deleted upon request.
+        </p>
+
+        <h6>Data Security</h6>
+        <p>
+          We implement appropriate security measures to protect your personal
+          information.
+        </p>
+
+        <h6>Your Rights</h6>
+        <p>
+          You can access, modify, or delete your data at any time through your
+          profile settings.
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,106 @@
+{% extends 'measurements/base.html' %} {% block title %}Confirm Logout{%
+endblock %} {% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header bg-warning text-dark">
+        <h3 class="text-center">
+          <i class="fas fa-sign-out-alt"></i> Confirm Logout
+        </h3>
+      </div>
+      <div class="card-body text-center">
+        <div class="mb-4">
+          <i
+            class="fas fa-question-circle text-warning"
+            style="font-size: 3rem"
+          ></i>
+        </div>
+
+        <h4 class="card-title">Are you sure you want to log out?</h4>
+        <p class="card-text text-muted">
+          You are currently logged in as <strong>{{ user.username }}</strong>
+        </p>
+
+        <div class="alert alert-info">
+          <i class="fas fa-info-circle"></i>
+          <strong>Note:</strong> You will need to log in again to access your
+          goat measurements and upload new images.
+        </div>
+
+        <form method="post" class="d-inline">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-danger btn-lg me-3">
+            <i class="fas fa-sign-out-alt"></i> Yes, Log Out
+          </button>
+        </form>
+
+        <a
+          href="{% url 'measurements:dashboard' %}"
+          class="btn btn-secondary btn-lg"
+        >
+          <i class="fas fa-arrow-left"></i> Cancel
+        </a>
+
+        <div class="mt-4">
+          <small class="text-muted">
+            <i class="fas fa-clock"></i>
+            This page will automatically redirect in
+            <span id="countdown">30</span> seconds
+          </small>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Stats (to remind user what they'll lose access to) -->
+    <div class="card mt-3">
+      <div class="card-body">
+        <h6 class="card-title text-center">
+          <i class="fas fa-chart-bar text-primary"></i>
+          Your Current Session Stats
+        </h6>
+        <div class="row text-center">
+          <div class="col-4">
+            <strong class="text-primary">{{ user.goat_set.count }}</strong>
+            <br /><small class="text-muted">Goats</small>
+          </div>
+          <div class="col-4">
+            <strong class="text-success"
+              >{{ user.goat_set.aggregate.total_measurements|default:0
+              }}</strong
+            >
+            <br /><small class="text-muted">Measurements</small>
+          </div>
+          <div class="col-4">
+            <strong class="text-info">{{ user.date_joined|date:"M Y" }}</strong>
+            <br /><small class="text-muted">Member Since</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Countdown timer
+  let countdown = 30;
+  const countdownElement = document.getElementById("countdown");
+
+  const timer = setInterval(function () {
+    countdown--;
+    countdownElement.textContent = countdown;
+
+    if (countdown <= 0) {
+      clearInterval(timer);
+      // Auto redirect to dashboard (cancel logout)
+      window.location.href = "{% url 'measurements:dashboard' %}";
+    }
+  }, 1000);
+
+  // Clear timer if user interacts with buttons
+  document.querySelectorAll("button, a").forEach((element) => {
+    element.addEventListener("click", function () {
+      clearInterval(timer);
+    });
+  });
+</script>
+{% endblock %}

@@ -1,0 +1,101 @@
+{% extends 'measurements/base.html' %} {% block title %}Logged Out{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-6">
+    <div class="card text-center">
+      <div class="card-header bg-success text-white">
+        <h3>🐐 Logout Successful</h3>
+      </div>
+      <div class="card-body">
+        <div class="mb-4">
+          <i
+            class="fas fa-check-circle text-success"
+            style="font-size: 3rem"
+          ></i>
+        </div>
+        <h4 class="card-title">You have been successfully logged out</h4>
+        <p class="card-text text-muted">
+          Thank you for using GoatMorpho! Your session has ended securely.
+        </p>
+
+        <div class="d-grid gap-2">
+          <a href="{% url 'login' %}" class="btn btn-primary btn-lg">
+            <i class="fas fa-sign-in-alt"></i> Login Again
+          </a>
+          <a
+            href="{% url 'measurements:dashboard' %}"
+            class="btn btn-outline-secondary"
+          >
+            <i class="fas fa-home"></i> Go to Homepage
+          </a>
+        </div>
+
+        <div class="mt-4">
+          <small class="text-muted">
+            If you didn't log out intentionally, please
+            <a href="{% url 'login' %}" class="text-decoration-none"
+              >log back in</a
+            >
+            immediately.
+          </small>
+        </div>
+      </div>
+      <div class="card-footer text-muted">
+        <small>
+          <i class="fas fa-shield-alt"></i>
+          Your data is protected and secure
+        </small>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="card mt-3">
+      <div class="card-body">
+        <h6 class="card-title">
+          <i class="fas fa-info-circle text-info"></i>
+          What you can do next:
+        </h6>
+        <div class="row text-center">
+          <div class="col-md-4">
+            <div class="border-end">
+              <i
+                class="fas fa-user-plus text-primary mb-2"
+                style="font-size: 1.5rem"
+              ></i>
+              <h6>Create Account</h6>
+              <small class="text-muted">Sign up for GoatMorpho</small>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="border-end">
+              <i
+                class="fas fa-question-circle text-warning mb-2"
+                style="font-size: 1.5rem"
+              ></i>
+              <h6>Need Help?</h6>
+              <small class="text-muted">Check our documentation</small>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <i
+              class="fas fa-envelope text-success mb-2"
+              style="font-size: 1.5rem"
+            ></i>
+            <h6>Contact Us</h6>
+            <small class="text-muted">Get support</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Auto-redirect to login after 30 seconds (optional)
+  setTimeout(function () {
+    if (confirm("Would you like to be redirected to the login page?")) {
+      window.location.href = "{% url 'login' %}";
+    }
+  }, 30000);
+</script>
+{% endblock %}
