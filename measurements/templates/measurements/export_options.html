@@ -1,6 +1,6 @@
-{% extends 'measurements/base.html' %} 
+{% extends 'measurements/base.html' %}
 
-{% block title %}Export Data -GoatMorpho{% endblock %} 
+{% block title %}Export Data - GoatMorpho{% endblock %}
 
 {% block content %}
 <div class="row justify-content-center">
@@ -30,10 +30,7 @@
             You haven't made any measurements yet. Upload goat images to start
             collecting data.
           </p>
-          <a
-            href="{% url 'measurements:upload_image' %}"
-            class="btn btn-primary"
-          >
+          <a href="{% url 'measurements:upload_image' %}" class="btn btn-primary">
             <i class="fas fa-upload"></i> Upload First Image
           </a>
         </div>
@@ -51,9 +48,10 @@
                   </option>
                   {% for goat in goats %}
                   <option value="{{ goat.id }}">
-                    {{ goat.name|default:"Unnamed Goat" }} {% if goat.breed
-                    %}({{ goat.breed }}){% endif %} - {{
-                    goat.morphometricmeasurement_set.count }} measurements
+                    {{ goat.name|default:"Unnamed Goat" }}
+                    {% if goat.breed %}
+                    ({{ goat.breed }})
+                    {% endif %} - {{ goat.morphometricmeasurement_set.count }} measurements
                   </option>
                   {% endfor %}
                 </select>
@@ -132,10 +130,7 @@
             <button type="submit" class="btn btn-success btn-lg">
               <i class="fas fa-download"></i> Generate & Download Excel File
             </button>
-            <a
-              href="{% url 'measurements:dashboard' %}"
-              class="btn btn-secondary"
-            >
+            <a href="{% url 'measurements:dashboard' %}" class="btn btn-secondary">
               <i class="fas fa-arrow-left"></i> Back to Dashboard
             </a>
           </div>
