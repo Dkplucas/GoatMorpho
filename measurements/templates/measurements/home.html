@@ -123,58 +123,71 @@
   <!-- Comprehensive Measurements Section -->
   <div class="row mt-5 mb-5">
     <div class="col-md-12">
-      <div class="row">
-        <div class="col-md-8">
-          <h2 class="mb-4">Comprehensive Measurements</h2>
-          <p class="mb-4">GoatMorpho captures various 12+ morphometric measurements</p>
+      <div class="card" style="border-radius: 0.5rem;">
+        <div class="card-body p-5">
           <div class="row">
             <div class="col-md-6">
-              <ul class="list-unstyled">
-                <li class="mb-2"><strong>Body length</strong></li>
-                <li class="mb-2"><strong>Head length</strong></li>
-                <li class="mb-2"><strong>Hip width</strong></li>
-                <li class="mb-2"><strong>Rump width</strong></li>
-                <li class="mb-2"><strong>Chest girth</strong></li>
-                <li class="mb-2"><strong>Neck length</strong></li>
-              </ul>
+              <h2 class="mb-4">Comprehensive Measurements</h2>
+              <p class="mb-4">GoatMorpho captures various 12+ morphometric measurements</p>
+              <div class="row">
+                <div class="col-md-6">
+                  <ul class="list-unstyled">
+                    <li class="mb-2"><strong>Body length</strong></li>
+                    <li class="mb-2"><strong>Height at withers</strong></li>
+                    <li class="mb-2"><strong>Rump girth</strong></li>
+                    <li class="mb-2"><strong>Rump length</strong></li>
+                    <li class="mb-2"><strong>Chest girth</strong></li>
+                    <li class="mb-2"><strong>Neck length</strong></li>
+                  </ul>
+                </div>
+                <div class="col-md-6">
+                  <ul class="list-unstyled">
+                    <li class="mb-2"><strong>Picod</strong></li>
+                    <li class="mb-2"><strong>Barrel depth</strong></li>
+                    <li class="mb-2"><strong>Bicostal diameter</strong></li>
+                    <li class="mb-2"><strong>Head length</strong></li>
+                    <li class="mb-2"><strong>Hip width</strong></li>
+                    <li class="mb-2"><strong>Rump width</strong></li>
+                  </ul>
+                </div>
+              </div>
             </div>
-            <div class="col-md-6">
-              <!-- Goat diagram would go here -->
-              <div class="text-center p-4" style="background-color: #f8f9fa; border-radius: 0.5rem;">
-                <i class="fas fa-image fa-3x text-muted mb-2"></i>
-                <p class="text-muted">Goat Measurement Diagram</p>
-                <small class="text-muted">Visual representation of measurement points</small>
+            <div class="col-md-6 d-flex align-items-center justify-content-center">
+              <div class="text-center">
+                <img src="{% load static %}{% static 'images/goat-illu.png' %}" alt="Goat Measurement Diagram" class="img-fluid" style="max-width: 100%; height: auto;">
               </div>
             </div>
           </div>
-        </div>
-        <div class="col-md-4">
-          <div class="card" style="border-radius: 0.5rem; background-color: #f8f9fa;">
-            <div class="card-header text-center">
-              <h6 class="mb-0">Sample Measurement Results</h6>
-            </div>
-            <div class="card-body">
-              <div class="d-flex justify-content-between mb-2">
-                <span>Height at withers</span>
-                <strong>62.0 cm</strong>
+          <div class="row mt-4">
+            <div class="col-md-6 offset-md-6">
+              <div class="card" style="border-radius: 0.5rem; background-color: #f8f9fa;">
+                <div class="card-header text-center">
+                  <h6 class="mb-0">Sample Measurement Results</h6>
+                </div>
+                <div class="card-body">
+                  <div class="d-flex justify-content-between mb-2">
+                    <span>Height at withers</span>
+                    <strong>62.0 cm</strong>
+                  </div>
+                  <div class="d-flex justify-content-between mb-2">
+                    <span>Body length</span>
+                    <strong>78.6 cm</strong>
+                  </div>
+                  <div class="d-flex justify-content-between mb-2">
+                    <span>Chest circumference</span>
+                    <strong>81.4 cm</strong>
+                  </div>
+                  <div class="d-flex justify-content-between mb-2">
+                    <span>Head length</span>
+                    <strong>23.8 cm</strong>
+                  </div>
+                  <div class="d-flex justify-content-between mb-3">
+                    <span>Rump height</span>
+                    <strong>54.7 cm</strong>
+                  </div>
+                  <small class="text-muted">Please scroll to see all measurements.</small>
+                </div>
               </div>
-              <div class="d-flex justify-content-between mb-2">
-                <span>Body length</span>
-                <strong>78.6 cm</strong>
-              </div>
-              <div class="d-flex justify-content-between mb-2">
-                <span>Chest circumference</span>
-                <strong>81.4 cm</strong>
-              </div>
-              <div class="d-flex justify-content-between mb-2">
-                <span>Head length</span>
-                <strong>23.8 cm</strong>
-              </div>
-              <div class="d-flex justify-content-between mb-3">
-                <span>Rump height</span>
-                <strong>54.7 cm</strong>
-              </div>
-              <small class="text-muted">Please scroll to see all measurements.</small>
             </div>
           </div>
         </div>
