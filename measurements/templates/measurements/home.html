@@ -125,41 +125,14 @@
     <div class="col-md-12">
       <div class="card" style="border-radius: 0.5rem;">
         <div class="card-body p-5">
-          <div class="row">
-            <div class="col-md-6">
-              <h2 class="mb-4">Comprehensive Measurements</h2>
-              <p class="mb-4">GoatMorpho captures various 12+ morphometric measurements</p>
-              <div class="row">
-                <div class="col-md-6">
-                  <ul class="list-unstyled">
-                    <li class="mb-2"><strong>Body length</strong></li>
-                    <li class="mb-2"><strong>Height at withers</strong></li>
-                    <li class="mb-2"><strong>Rump girth</strong></li>
-                    <li class="mb-2"><strong>Rump length</strong></li>
-                    <li class="mb-2"><strong>Chest girth</strong></li>
-                    <li class="mb-2"><strong>Neck length</strong></li>
-                  </ul>
-                </div>
-                <div class="col-md-6">
-                  <ul class="list-unstyled">
-                    <li class="mb-2"><strong>Picod</strong></li>
-                    <li class="mb-2"><strong>Barrel depth</strong></li>
-                    <li class="mb-2"><strong>Bicostal diameter</strong></li>
-                    <li class="mb-2"><strong>Head length</strong></li>
-                    <li class="mb-2"><strong>Hip width</strong></li>
-                    <li class="mb-2"><strong>Rump width</strong></li>
-                  </ul>
-                </div>
-              </div>
-            </div>
+          <h2 class="text-center mb-5">Comprehensive Measurements</h2>
+          <div class="row align-items-center">
             <div class="col-md-6 d-flex align-items-center justify-content-center">
               <div class="text-center">
                 <img src="{% load static %}{% static 'images/goat-illu.png' %}" alt="Goat Measurement Diagram" class="img-fluid" style="max-width: 100%; height: auto;">
               </div>
             </div>
-          </div>
-          <div class="row mt-4">
-            <div class="col-md-6 offset-md-6">
+            <div class="col-md-6">
               <div class="card" style="border-radius: 0.5rem; background-color: #f8f9fa;">
                 <div class="card-header text-center">
                   <h6 class="mb-0">Sample Measurement Results</h6>
@@ -181,11 +154,23 @@
                     <span>Head length</span>
                     <strong>23.8 cm</strong>
                   </div>
-                  <div class="d-flex justify-content-between mb-3">
+                  <div class="d-flex justify-content-between mb-2">
                     <span>Rump height</span>
                     <strong>54.7 cm</strong>
                   </div>
-                  <small class="text-muted">Please scroll to see all measurements.</small>
+                  <div class="d-flex justify-content-between mb-2">
+                    <span>Picod</span>
+                    <strong>45.2 cm</strong>
+                  </div>
+                  <div class="d-flex justify-content-between mb-2">
+                    <span>Barrel depth</span>
+                    <strong>38.9 cm</strong>
+                  </div>
+                  <div class="d-flex justify-content-between mb-3">
+                    <span>Bicostal diameter</span>
+                    <strong>29.1 cm</strong>
+                  </div>
+                  <small class="text-muted">GoatMorpho captures 12+ morphometric measurements automatically.</small>
                 </div>
               </div>
             </div>
