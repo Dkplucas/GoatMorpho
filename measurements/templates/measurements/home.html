@@ -7,19 +7,16 @@
 <div class="hero-slide position-relative overflow-hidden">
   <div class="container py-5">
     <div class="row align-items-center min-vh-50">
-      <div class="col-lg-8 mx-auto text-center">
+      <div class="col-lg-8 text-start">
         <h1 class="display-3 fw-bold text-dark mb-4">GoatMorpho</h1>
         <h2 class="h3 text-muted mb-4">Advanced computer vision for automated goat morphometric analysis</h2>
         <p class="lead text-dark mb-5">
           Transform the way you measure and analyze goat morphology with our cutting-edge AI-powered platform. 
           Upload photos and get morphometric measurements instantly.
         </p>
-        <div class="d-flex justify-content-center gap-3 flex-wrap">
+        <div class="d-flex gap-3 flex-wrap">
           {% if user.is_authenticated %}
-            <a href="{% url 'measurements:upload_image' %}" class="btn btn-primary btn-lg px-4 py-3" style="background-color: #fc8543; border-color: #fc8543;">
-              <i class="fas fa-upload me-2"></i>Start Measuring
-            </a>
-            <a href="{% url 'measurements:dashboard' %}" class="btn btn-outline-primary btn-lg px-4 py-3" style="border-color: #fc8543; color: #fc8543;">
+            <a href="{% url 'measurements:dashboard' %}" class="btn btn-lg px-4 py-3" style="border-color: #fc8543; background-color: #fc8543; color: white;">
               <i class="fas fa-tachometer-alt me-2"></i>View Dashboard
             </a>
           {% else %}
@@ -32,56 +29,55 @@
           {% endif %}
         </div>
       </div>
+      <div class="col-lg-4 d-flex justify-content-center align-items-center">
+        <div class="text-center">
+          <i class="fas fa-chart-line" style="font-size: 8rem; color: #fc8543; opacity: 0.7;"></i>
+        </div>
+      </div>
     </div>
   </div>
   <!-- Background gradient overlay -->
   <div class="position-absolute top-0 start-0 w-100 h-100" style="background: linear-gradient(135deg, #feebc4 0%, #fde6a8 50%, #fcda7a 100%); z-index: -1;"></div>
 </div>
 
+<!-- GoatMorpho Section -->
 <div class="container mt-4">
   <div class="row">
     <div class="col-md-12 text-center">
-      <h1 class="display-4 mb-4">GoatMorpho</h1>
-      <p class="lead mb-4">Automated Goat Morphometric Measurement System</p>
-      <p class="mb-4">
-        Upload goat images and get precise morphometric measurements using
-        computer vision and machine learning.
-      </p>
+      <h1 class="display-4 mb-4">Why choose GoatMorpho?</h1>
     </div>
   </div>
 
   <div class="row mt-5">
     <div class="col-md-4">
-      <div class="card h-100">
+      <div class="card h-100" style="border-radius: 0.5rem;">
         <div class="card-body text-center">
-          <i class="fas fa-upload fa-3x text-primary mb-3"></i>
-          <h5 class="card-title">Upload Images</h5>
+          <i class="fas fa-brain fa-3x text-primary mb-3"></i>
+          <h5 class="card-title">AI-powered analysis</h5>
           <p class="card-text">
-            Upload high-quality goat images for automated morphometric analysis.
+            Advanced computer vision extracts precise morphometric measurements from goat images automatically.
           </p>
         </div>
       </div>
     </div>
     <div class="col-md-4">
-      <div class="card h-100">
+      <div class="card h-100" style="border-radius: 0.5rem;">
         <div class="card-body text-center">
-          <i class="fas fa-ruler fa-3x text-success mb-3"></i>
-          <h5 class="card-title">Automated Measurements</h5>
+          <i class="fas fa-tachometer-alt fa-3x text-success mb-3"></i>
+          <h5 class="card-title">Instant Results</h5>
           <p class="card-text">
-            AI-powered computer vision extracts precise morphometric
-            measurements automatically.
+            Receive detailed morphometric measurements within seconds of uploading your images.
           </p>
         </div>
       </div>
     </div>
     <div class="col-md-4">
-      <div class="card h-100">
+      <div class="card h-100" style="border-radius: 0.5rem;">
         <div class="card-body text-center">
-          <i class="fas fa-chart-bar fa-3x text-info mb-3"></i>
-          <h5 class="card-title">Track Results</h5>
+          <i class="fas fa-database fa-3x text-info mb-3"></i>
+          <h5 class="card-title">Data Management</h5>
           <p class="card-text">
-            View and manage your measurement results with detailed statistics
-            and analysis.
+            Efficiently store and manage your measurement results with detailed statistics and analysis.
           </p>
         </div>
       </div>
