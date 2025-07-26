@@ -84,6 +84,137 @@
     </div>
   </div>
 
+  <!-- How It Works Section -->
+  <div class="row mt-5 mb-5">
+    <div class="col-md-12">
+      <h2 class="text-center mb-5">How It Works</h2>
+      <div class="row">
+        <div class="col-md-4 text-center mb-4">
+          <div class="mb-3">
+            <div class="rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 60px; height: 60px; background-color: #007bff; color: white; font-size: 24px; font-weight: bold;">
+              1
+            </div>
+          </div>
+          <h5 class="mb-3">Upload Photo</h5>
+          <p class="text-muted">Take a clear side profile photo of your goat and upload it to the platform using our simple interface</p>
+        </div>
+        <div class="col-md-4 text-center mb-4">
+          <div class="mb-3">
+            <div class="rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 60px; height: 60px; background-color: #28a745; color: white; font-size: 24px; font-weight: bold;">
+              2
+            </div>
+          </div>
+          <h5 class="mb-3">AI Analysis</h5>
+          <p class="text-muted">Our computer vision algorithms automatically detect key morphometric points and generate accurate measurements</p>
+        </div>
+        <div class="col-md-4 text-center mb-4">
+          <div class="mb-3">
+            <div class="rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 60px; height: 60px; background-color: #fd7e14; color: white; font-size: 24px; font-weight: bold;">
+              ✓
+            </div>
+          </div>
+          <h5 class="mb-3">Get Results</h5>
+          <p class="text-muted">View detailed measurement results including or export them as Excel and PDF reports for easy record keeping</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Comprehensive Measurements Section -->
+  <div class="row mt-5 mb-5">
+    <div class="col-md-12">
+      <div class="row">
+        <div class="col-md-8">
+          <h2 class="mb-4">Comprehensive Measurements</h2>
+          <p class="mb-4">GoatMorpho captures various 12+ morphometric measurements</p>
+          <div class="row">
+            <div class="col-md-6">
+              <ul class="list-unstyled">
+                <li class="mb-2"><strong>Body length</strong></li>
+                <li class="mb-2"><strong>Head length</strong></li>
+                <li class="mb-2"><strong>Hip width</strong></li>
+                <li class="mb-2"><strong>Rump width</strong></li>
+                <li class="mb-2"><strong>Chest girth</strong></li>
+                <li class="mb-2"><strong>Neck length</strong></li>
+              </ul>
+            </div>
+            <div class="col-md-6">
+              <!-- Goat diagram would go here -->
+              <div class="text-center p-4" style="background-color: #f8f9fa; border-radius: 0.5rem;">
+                <i class="fas fa-image fa-3x text-muted mb-2"></i>
+                <p class="text-muted">Goat Measurement Diagram</p>
+                <small class="text-muted">Visual representation of measurement points</small>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card" style="border-radius: 0.5rem; background-color: #f8f9fa;">
+            <div class="card-header text-center">
+              <h6 class="mb-0">Sample Measurement Results</h6>
+            </div>
+            <div class="card-body">
+              <div class="d-flex justify-content-between mb-2">
+                <span>Height at withers</span>
+                <strong>62.0 cm</strong>
+              </div>
+              <div class="d-flex justify-content-between mb-2">
+                <span>Body length</span>
+                <strong>78.6 cm</strong>
+              </div>
+              <div class="d-flex justify-content-between mb-2">
+                <span>Chest circumference</span>
+                <strong>81.4 cm</strong>
+              </div>
+              <div class="d-flex justify-content-between mb-2">
+                <span>Head length</span>
+                <strong>23.8 cm</strong>
+              </div>
+              <div class="d-flex justify-content-between mb-3">
+                <span>Rump height</span>
+                <strong>54.7 cm</strong>
+              </div>
+              <small class="text-muted">Please scroll to see all measurements.</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- User Categories Section -->
+  <div class="row mt-5 mb-5">
+    <div class="col-md-12">
+      <div class="row text-center">
+        <div class="col-md-3 mb-4">
+          <div class="mb-3">
+            <i class="fas fa-flask fa-3x" style="color: #007bff;"></i>
+          </div>
+          <h6 class="fw-bold">Researchers</h6>
+        </div>
+        <div class="col-md-3 mb-4">
+          <div class="mb-3">
+            <i class="fas fa-paw fa-3x" style="color: #fd7e14;"></i>
+          </div>
+          <h6 class="fw-bold">Breeders</h6>
+        </div>
+        <div class="col-md-3 mb-4">
+          <div class="mb-3">
+            <i class="fas fa-home fa-3x" style="color: #007bff;"></i>
+          </div>
+          <h6 class="fw-bold">Farm Managers</h6>
+        </div>
+        <div class="col-md-3 mb-4">
+          <div class="mb-3">
+            <i class="fas fa-stethoscope fa-3x" style="color: #fd7e14;"></i>
+          </div>
+          <h6 class="fw-bold">Veterinarians</h6>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Welcome/Get Started Section -->
   <div class="row mt-5">
     <div class="col-md-12 text-center">
       {% if user.is_authenticated %}
@@ -91,13 +222,15 @@
       <div class="mt-3">
         <a
           href="{% url 'measurements:dashboard' %}"
-          class="btn btn-primary btn-lg me-3"
+          class="btn btn-lg me-3"
+          style="background-color: #fc8543; border-color: #fc8543; color: white; padding: 12px 30px; border-radius: 0.5rem;"
         >
           <i class="fas fa-tachometer-alt me-2"></i>Go to Dashboard
         </a>
         <a
           href="{% url 'measurements:upload_image' %}"
-          class="btn btn-success btn-lg"
+          class="btn btn-outline-primary btn-lg"
+          style="border-color: #fc8543; color: #fc8543; padding: 12px 30px; border-radius: 0.5rem;"
         >
           <i class="fas fa-upload me-2"></i>Upload Image
         </a>
@@ -108,43 +241,18 @@
         Join GoatMorpho to start measuring your goats with precision.
       </p>
       <div class="mt-3">
-        <a href="{% url 'login' %}" class="btn btn-primary btn-lg me-3">
+        <a href="{% url 'login' %}" class="btn btn-lg me-3" style="background-color: #fc8543; border-color: #fc8543; color: white; padding: 12px 30px; border-radius: 0.5rem;">
           <i class="fas fa-sign-in-alt me-2"></i>Login
         </a>
         <a
           href="{% url 'measurements:register' %}"
           class="btn btn-outline-primary btn-lg"
+          style="border-color: #fc8543; color: #fc8543; padding: 12px 30px; border-radius: 0.5rem;"
         >
           <i class="fas fa-user-plus me-2"></i>Register
         </a>
       </div>
       {% endif %}
-    </div>
-  </div>
-
-  <div class="row mt-5">
-    <div class="col-md-12">
-      <h3 class="text-center mb-4">Morphometric Measurements</h3>
-      <div class="row">
-        <div class="col-md-6">
-          <h5>Height Measurements</h5>
-          <ul>
-            <li><strong>WH:</strong> Wither Height (Hauteur au garrot)</li>
-            <li><strong>BH:</strong> Back Height (Hauteur au dos)</li>
-            <li><strong>SH:</strong> Sternum Height (Hauteur au sternum)</li>
-            <li><strong>RH:</strong> Rump Height (Hauteur au sacrum)</li>
-          </ul>
-        </div>
-        <div class="col-md-6">
-          <h5>Body Measurements</h5>
-          <ul>
-            <li><strong>BL:</strong> Body Length</li>
-            <li><strong>HG:</strong> Heart Girth (Tour de poitrine)</li>
-            <li><strong>CC:</strong> Chest Circumference</li>
-            <li><strong>AG:</strong> Abdominal Girth</li>
-          </ul>
-        </div>
-      </div>
     </div>
   </div>
 </div>
