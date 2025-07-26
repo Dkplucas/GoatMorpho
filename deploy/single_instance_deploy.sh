@@ -59,12 +59,26 @@ log_info "Domain: $DOMAIN ($PUBLIC_IP)"
 log_info "Updating system packages..."
 apt update && apt upgrade -y
 
+# Detect Python version
+log_info "Detecting available Python version..."
+if command -v python3.12 &> /dev/null; then
+    PYTHON_VERSION="3.12"
+    PYTHON_CMD="python3.12"
+elif command -v python3.11 &> /dev/null; then
+    PYTHON_VERSION="3.11"
+    PYTHON_CMD="python3.11"
+else
+    PYTHON_VERSION="3"
+    PYTHON_CMD="python3"
+fi
+log_info "Using Python $PYTHON_VERSION"
+
 # Install essential packages
 log_info "Installing essential packages..."
 apt install -y \
-    python3.11 \
-    python3.11-venv \
-    python3.11-dev \
+    python3 \
+    python3-venv \
+    python3-dev \
     python3-pip \
     postgresql \
     postgresql-contrib \
@@ -179,7 +193,7 @@ chown -R "$APP_USER:$APP_USER" "$APP_DIR"
 
 # Setup Python virtual environment
 log_info "Setting up Python virtual environment..."
-sudo -u "$APP_USER" python3.11 -m venv "$APP_DIR/venv"
+sudo -u "$APP_USER" $PYTHON_CMD -m venv "$APP_DIR/venv"
 
 # Install Python dependencies
 log_info "Installing Python dependencies..."
