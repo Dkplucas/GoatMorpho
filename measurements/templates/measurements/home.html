@@ -8,25 +8,25 @@
   <div class="container py-5">
     <div class="row align-items-center min-vh-50">
       <div class="col-lg-8 mx-auto text-center">
-        <h1 class="display-3 fw-bold text-white mb-4">GoatMorpho</h1>
-        <h2 class="h3 text-white-50 mb-4">Advanced computer vision for automated goat morphometric analysis</h2>
-        <p class="lead text-white mb-5">
+        <h1 class="display-3 fw-bold text-dark mb-4">GoatMorpho</h1>
+        <h2 class="h3 text-muted mb-4">Advanced computer vision for automated goat morphometric analysis</h2>
+        <p class="lead text-dark mb-5">
           Transform the way you measure and analyze goat morphology with our cutting-edge AI-powered platform. 
           Upload photos and get morphometric measurements instantly.
         </p>
         <div class="d-flex justify-content-center gap-3 flex-wrap">
           {% if user.is_authenticated %}
-            <a href="{% url 'measurements:upload_image' %}" class="btn btn-light btn-lg px-4 py-3">
+            <a href="{% url 'measurements:upload_image' %}" class="btn btn-primary btn-lg px-4 py-3" style="background-color: #fc8543; border-color: #fc8543;">
               <i class="fas fa-upload me-2"></i>Start Measuring
             </a>
-            <a href="{% url 'measurements:dashboard' %}" class="btn btn-outline-light btn-lg px-4 py-3">
+            <a href="{% url 'measurements:dashboard' %}" class="btn btn-outline-primary btn-lg px-4 py-3" style="border-color: #fc8543; color: #fc8543;">
               <i class="fas fa-tachometer-alt me-2"></i>View Dashboard
             </a>
           {% else %}
-            <a href="{% url 'measurements:register' %}" class="btn btn-light btn-lg px-4 py-3">
+            <a href="{% url 'measurements:register' %}" class="btn btn-primary btn-lg px-4 py-3" style="background-color: #fc8543; border-color: #fc8543;">
               <i class="fas fa-user-plus me-2"></i>Get Started
             </a>
-            <a href="{% url 'login' %}" class="btn btn-outline-light btn-lg px-4 py-3">
+            <a href="{% url 'login' %}" class="btn btn-outline-primary btn-lg px-4 py-3" style="border-color: #fc8543; color: #fc8543;">
               <i class="fas fa-sign-in-alt me-2"></i>Login
             </a>
           {% endif %}
@@ -35,7 +35,7 @@
     </div>
   </div>
   <!-- Background gradient overlay -->
-  <div class="position-absolute top-0 start-0 w-100 h-100" style="background: linear-gradient(135deg, #fc8543 0%, #ff6b35 50%, #e55d36 100%); z-index: -1;"></div>
+  <div class="position-absolute top-0 start-0 w-100 h-100" style="background: linear-gradient(135deg, #feebc4 0%, #fde6a8 50%, #fcda7a 100%); z-index: -1;"></div>
 </div>
 
 <div class="container mt-4">
