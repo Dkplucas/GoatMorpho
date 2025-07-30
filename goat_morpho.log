@@ -259,3 +259,5 @@ Not Found: /favicon.ico
 "GET / HTTP/1.1" 200 15276
 Watching for file changes with StatReloader
 "GET / HTTP/1.1" 200 15272
+"GET / HTTP/1.1" 200 16715
+"GET / HTTP/1.1" 200 15946

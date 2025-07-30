@@ -224,47 +224,5 @@
       </div>
     </div>
   </div>
-
-  <!-- Welcome/Get Started Section -->
-  <div class="row mt-5">
-    <div class="col-md-12 text-center">
-      {% if user.is_authenticated %}
-      <h3>Welcome back, {{ user.first_name|default:user.username }}!</h3>
-      <div class="mt-3">
-        <a
-          href="{% url 'measurements:dashboard' %}"
-          class="btn btn-lg me-3"
-          style="background-color: #fc8543; border-color: #fc8543; color: white; padding: 12px 30px; border-radius: 0.5rem;"
-        >
-          <i class="fas fa-tachometer-alt me-2"></i>Go to Dashboard
-        </a>
-        <a
-          href="{% url 'measurements:upload_image' %}"
-          class="btn btn-outline-primary btn-lg"
-          style="border-color: #fc8543; color: #fc8543; padding: 12px 30px; border-radius: 0.5rem;"
-        >
-          <i class="fas fa-upload me-2"></i>Upload Image
-        </a>
-      </div>
-      {% else %}
-      <h3>Get Started Today</h3>
-      <p class="mb-4">
-        Join GoatMorpho to start measuring your goats with precision.
-      </p>
-      <div class="mt-3">
-        <a href="{% url 'login' %}" class="btn btn-lg me-3" style="background-color: #fc8543; border-color: #fc8543; color: white; padding: 12px 30px; border-radius: 0.5rem;">
-          <i class="fas fa-sign-in-alt me-2"></i>Login
-        </a>
-        <a
-          href="{% url 'measurements:register' %}"
-          class="btn btn-outline-primary btn-lg"
-          style="border-color: #fc8543; color: #fc8543; padding: 12px 30px; border-radius: 0.5rem;"
-        >
-          <i class="fas fa-user-plus me-2"></i>Register
-        </a>
-      </div>
-      {% endif %}
-    </div>
-  </div>
 </div>
 {% endblock %}
