@@ -206,3 +206,54 @@ MediaPipe processing completed
 Extracted 17 keypoints
 Calculated 7 measurements
 Error creating Excel export: 'MorphometricMeasurement' object has no attribute 'longueur_du_corps'
+Watching for file changes with StatReloader
+"GET /admin HTTP/1.1" 301 0
+"GET /admin/ HTTP/1.1" 302 0
+"GET /admin/login/?next=/admin/ HTTP/1.1" 200 4158
+"GET /static/admin/css/base.css HTTP/1.1" 200 21544
+"GET /static/admin/css/dark_mode.css HTTP/1.1" 200 2682
+"GET /static/admin/js/theme.js HTTP/1.1" 200 1943
+"GET /static/admin/css/nav_sidebar.css HTTP/1.1" 200 2810
+"GET /static/admin/css/login.css HTTP/1.1" 200 958
+"GET /static/admin/css/responsive.css HTTP/1.1" 200 17905
+"GET /static/admin/js/nav_sidebar.js HTTP/1.1" 200 3063
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 5998
+"GET / HTTP/1.1" 200 13569
+"GET /static/images/goat_logo.svg HTTP/1.1" 200 31131
+"GET /static/images/goat-illu.png HTTP/1.1" 200 1376662
+"GET /static/images/favicon.ico HTTP/1.1" 200 15406
+"GET / HTTP/1.1" 200 13569
+"GET /static/images/goat_logo.svg HTTP/1.1" 200 31131
+"GET /static/images/goat-illu.png HTTP/1.1" 200 1376662
+"GET /static/images/favicon.ico HTTP/1.1" 200 15406
+"GET /register/ HTTP/1.1" 200 11142
+"GET / HTTP/1.1" 200 13569
+"GET / HTTP/1.1" 200 13569
+"GET / HTTP/1.1" 200 13745
+"GET / HTTP/1.1" 200 13745
+"GET / HTTP/1.1" 200 13745
+"GET / HTTP/1.1" 200 13745
+"GET / HTTP/1.1" 200 13745
+"GET / HTTP/1.1" 200 13745
+"GET / HTTP/1.1" 200 13745
+"GET /accounts/login/ HTTP/1.1" 200 6497
+"GET / HTTP/1.1" 200 13745
+"GET / HTTP/1.1" 200 13745
+"GET / HTTP/1.1" 200 13745
+"GET / HTTP/1.1" 200 13745
+"GET / HTTP/1.1" 200 13745
+"GET / HTTP/1.1" 200 13745
+"GET / HTTP/1.1" 200 13745
+"GET / HTTP/1.1" 200 13745
+"GET / HTTP/1.1" 200 13745
+"GET /accounts/login/ HTTP/1.1" 200 6497
+"GET / HTTP/1.1" 200 13745
+"GET /accounts/login/ HTTP/1.1" 200 6497
+"POST /accounts/login/ HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 23164
+"GET / HTTP/1.1" 200 15276
+"GET / HTTP/1.1" 200 15276
+"GET /upload/ HTTP/1.1" 200 20214
+"GET /dashboard/ HTTP/1.1" 200 23164
+"GET / HTTP/1.1" 200 15276
