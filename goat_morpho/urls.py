@@ -19,17 +19,14 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
-# Custom error handlers
-from measurements.views import custom_404_view
-
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')),
     path('', include('measurements.urls')),
 ]
 
-# Custom error handlers
-handler404 = custom_404_view
+# Custom error handlers will be enabled later
+# handler404 = custom_404_view
 
 # Serve media files during development
 if settings.DEBUG:
