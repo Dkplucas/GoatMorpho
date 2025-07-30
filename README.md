@@ -35,14 +35,14 @@
 | SH       | hauteur_au_sternum   | Hauteur au sternum       | Sternum Height        |
 | RH       | hauteur_au_sacrum    | Hauteur au Sacrum        | Rump Height           |
 | HG       | tour_de_poitrine     | Tour de poitrine         | Heart Girth           |
-| CC       | perimetre_thoracique | Périmètre thoracique     | Chest Circumference   |
+| CC       | perimetre_thoracique | Périmètre thoracique   | Chest Circumference   |
 | AG       | tour_abdominal       | Tour abdominal           | Abdominal Girth       |
-| BD       | diametre_biscotal    | Diamètre biscotal        | Bi-costal Diameter    |
+| BD       | diametre_biscotal    | Diamètre biscotal       | Bi-costal Diameter    |
 | CW       | largeur_poitrine     | Largeur poitrine         | Chest Width           |
 | RW       | largeur_hanche       | Largeur de Hanche/bassin | Rump Width            |
 | EL       | longueur_oreille     | Longueur oreille         | Ear Length            |
-| HL       | longueur_tete        | Longueur de la tête      | Head Length           |
-| HW       | largeur_tete         | Largeur de la tête       | Head Width            |
+| HL       | longueur_tete        | Longueur de la tête     | Head Length           |
+| HW       | largeur_tete         | Largeur de la tête      | Head Width            |
 | BL       | body_length          | Body length              | Body Length           |
 | NL       | longueur_cou         | Longueur du cou          | Neck Length           |
 | NG       | tour_du_cou          | Tour du cou              | Neck Girth            |
@@ -64,7 +64,6 @@
    git clone <repository-url>
    cd GoatMorpho
    ```
-
 2. **Create and activate virtual environment**
 
    ```bash
@@ -74,32 +73,27 @@
    # Linux/Mac
    source .venv/bin/activate
    ```
-
 3. **Install dependencies**
 
    ```bash
    pip install -r requirements.txt
    ```
-
 4. **Configure database**
 
    ```bash
    python manage.py makemigrations
    python manage.py migrate
    ```
-
 5. **Create superuser**
 
    ```bash
    python manage.py createsuperuser
    ```
-
 6. **Run development server**
 
    ```bash
    python manage.py runserver
    ```
-
 7. **Access the application**
 
    - Web Interface: http://127.0.0.1:8000/
@@ -262,7 +256,7 @@ If you use GoatMorpho in your research, please cite:
 
 ```
 GoatMorpho: Automated Goat Morphometric Analysis System
-[Okayama University/Animal Breeding and genetics]
+[DOSSOU KPONGAN LFCY/Animal Breeding and genetics]
 [2025]
 ```
 
