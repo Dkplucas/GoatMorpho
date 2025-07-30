@@ -2,10 +2,32 @@
 
 {% block title %}Register - GoatMorpho{% endblock %}
 
+{% block extra_css %}
+<style>
+.register-card .btn-primary {
+  background-color: #f17226;
+  border-color: #f17226;
+}
+.register-card .btn-primary:hover {
+  background-color: #d8611d;
+  border-color: #d8611d;
+}
+.register-card a {
+  color: #f17226 !important;
+}
+.register-card a:hover {
+  color: #d8611d !important;
+}
+.register-card .card-header.bg-primary {
+  background-color: #f17226 !important;
+}
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="row justify-content-center">
-  <div class="col-md-8">
-    <div class="card">
+  <div class="col-md-6">
+    <div class="card register-card" style="border-radius: 0.5rem;">
       <div class="card-header bg-primary text-white">
         <h3 class="text-center mb-0">
           <i class="fas fa-user-plus"></i> Join GoatMorpho
@@ -35,11 +57,15 @@
         <form method="post" novalidate>
           {% csrf_token %}
 
-          <div class="mb-3">
+          <div class="mb-3 text-center">
             <label for="{{ form.username.id_for_label }}" class="form-label">
               <i class="fas fa-user"></i> Username *
             </label>
-            {{ form.username }}
+            <div class="d-flex justify-content-center">
+              <div style="width: 60%;">
+                {{ form.username }}
+              </div>
+            </div>
             <div class="form-text">
               Choose a unique username (minimum 3 characters)
             </div>
@@ -48,29 +74,32 @@
             {% endif %}
           </div>
 
-          <div class="row">
-            <div class="col-md-6">
-              <div class="mb-3">
-                <label for="{{ form.password1.id_for_label }}" class="form-label">
-                  <i class="fas fa-lock"></i> Password *
-                </label>
+          <div class="mb-3 text-center">
+            <label for="{{ form.password1.id_for_label }}" class="form-label">
+              <i class="fas fa-lock"></i> Password *
+            </label>
+            <div class="d-flex justify-content-center">
+              <div style="width: 60%;">
                 {{ form.password1 }}
-                {% if form.password1.errors %}
-                <div class="text-danger small">{{ form.password1.errors.0 }}</div>
-                {% endif %}
               </div>
             </div>
-            <div class="col-md-6">
-              <div class="mb-3">
-                <label for="{{ form.password2.id_for_label }}" class="form-label">
-                  <i class="fas fa-lock"></i> Confirm Password *
-                </label>
+            {% if form.password1.errors %}
+            <div class="text-danger small">{{ form.password1.errors.0 }}</div>
+            {% endif %}
+          </div>
+
+          <div class="mb-3 text-center">
+            <label for="{{ form.password2.id_for_label }}" class="form-label">
+              <i class="fas fa-lock"></i> Confirm Password *
+            </label>
+            <div class="d-flex justify-content-center">
+              <div style="width: 60%;">
                 {{ form.password2 }}
-                {% if form.password2.errors %}
-                <div class="text-danger small">{{ form.password2.errors.0 }}</div>
-                {% endif %}
               </div>
             </div>
+            {% if form.password2.errors %}
+            <div class="text-danger small">{{ form.password2.errors.0 }}</div>
+            {% endif %}
           </div>
 
           <div class="d-grid">
@@ -98,7 +127,7 @@
     </div>
 
     <!-- Features Overview -->
-    <div class="card mt-4">
+    <div class="card mt-4" style="border-radius: 0.5rem;">
       <div class="card-body">
         <h5 class="card-title text-center">
           <i class="fas fa-star text-warning"></i> Why Join GoatMorpho?
