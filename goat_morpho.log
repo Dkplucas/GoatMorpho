@@ -624,3 +624,4 @@ Not Found: /favicon.ico
 "GET /upload/ HTTP/1.1" 200 17595
 Method Not Allowed (GET): /accounts/logout/
 "GET /accounts/logout/ HTTP/1.1" 405 0
+F:\Database\Deploy\GoatMorpho\goat_morpho\settings.py changed, reloading.
