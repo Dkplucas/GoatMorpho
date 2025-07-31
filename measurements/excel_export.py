@@ -4,6 +4,7 @@ from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
 from openpyxl.utils.dataframe import dataframe_to_rows
 from django.http import HttpResponse
 from django.utils import timezone
+from django.db import models
 from io import BytesIO
 import logging
 
@@ -129,22 +130,17 @@ class GoatMeasurementExporter:
                 
                 # Morphometric measurements
                 'Height at Withers (cm)': round(measurement.hauteur_au_garrot, 2) if measurement.hauteur_au_garrot else 'N/A',
-                'Body Length (cm)': round(measurement.longueur_du_corps, 2) if measurement.longueur_du_corps else 'N/A',
+                'Body Length (cm)': round(measurement.body_length, 2) if measurement.body_length else 'N/A',
                 'Chest Circumference (cm)': round(measurement.tour_de_poitrine, 2) if measurement.tour_de_poitrine else 'N/A',
-                'Height at Croup (cm)': round(measurement.hauteur_a_la_croupe, 2) if measurement.hauteur_a_la_croupe else 'N/A',
-                'Chest Width (cm)': round(measurement.largeur_de_poitrine, 2) if measurement.largeur_de_poitrine else 'N/A',
-                'Hip Width (cm)': round(measurement.largeur_aux_hanches, 2) if measurement.largeur_aux_hanches else 'N/A',
-                'Head Length (cm)': round(measurement.longueur_de_la_tete, 2) if measurement.longueur_de_la_tete else 'N/A',
-                'Head Width (cm)': round(measurement.largeur_de_la_tete, 2) if measurement.largeur_de_la_tete else 'N/A',
-                'Head Circumference (cm)': round(measurement.tour_de_tete, 2) if measurement.tour_de_tete else 'N/A',
-                'Ear Length (cm)': round(measurement.longueur_des_oreilles, 2) if measurement.longueur_des_oreilles else 'N/A',
-                'Neck Length (cm)': round(measurement.longueur_du_cou, 2) if measurement.longueur_du_cou else 'N/A',
+                'Height at Croup (cm)': round(measurement.hauteur_au_sacrum, 2) if measurement.hauteur_au_sacrum else 'N/A',
+                'Chest Width (cm)': round(measurement.largeur_poitrine, 2) if measurement.largeur_poitrine else 'N/A',
+                'Hip Width (cm)': round(measurement.largeur_hanche, 2) if measurement.largeur_hanche else 'N/A',
+                'Head Length (cm)': round(measurement.longueur_tete, 2) if measurement.longueur_tete else 'N/A',
+                'Head Width (cm)': round(measurement.largeur_tete, 2) if measurement.largeur_tete else 'N/A',
+                'Ear Length (cm)': round(measurement.longueur_oreille, 2) if measurement.longueur_oreille else 'N/A',
+                'Neck Length (cm)': round(measurement.longueur_cou, 2) if measurement.longueur_cou else 'N/A',
                 'Neck Circumference (cm)': round(measurement.tour_du_cou, 2) if measurement.tour_du_cou else 'N/A',
-                'Croup Length (cm)': round(measurement.longueur_de_la_croupe, 2) if measurement.longueur_de_la_croupe else 'N/A',
-                'Croup Width (cm)': round(measurement.largeur_de_la_croupe, 2) if measurement.largeur_de_la_croupe else 'N/A',
-                'Front Cannon Length (cm)': round(measurement.longueur_du_canon_anterieur, 2) if measurement.longueur_du_canon_anterieur else 'N/A',
-                'Rear Cannon Length (cm)': round(measurement.longueur_du_canon_posterieur, 2) if measurement.longueur_du_canon_posterieur else 'N/A',
-                'Cannon Circumference (cm)': round(measurement.tour_du_canon, 2) if measurement.tour_du_canon else 'N/A',
+                'Tail Length (cm)': round(measurement.longueur_queue, 2) if measurement.longueur_queue else 'N/A',
             }
             data.append(row)
         
@@ -186,7 +182,7 @@ class GoatMeasurementExporter:
         
         goats = Goat.objects.filter(owner=user)
         
-        headers = ['Goat ID', 'Name', 'Breed', 'Birth Date', 'Color', 'Total Measurements', 'Latest Measurement', 'Average Confidence']
+        headers = ['Goat ID', 'Name', 'Breed', 'Age (months)', 'Sex', 'Weight (kg)', 'Total Measurements', 'Latest Measurement', 'Average Confidence']
         
         # Write headers
         for col_num, header in enumerate(headers, 1):
@@ -201,15 +197,16 @@ class GoatMeasurementExporter:
             ws.cell(row=row_num, column=1, value=str(goat.id))
             ws.cell(row=row_num, column=2, value=goat.name or 'Unnamed')
             ws.cell(row=row_num, column=3, value=goat.breed or 'Unknown')
-            ws.cell(row=row_num, column=4, value=goat.birth_date.strftime('%Y-%m-%d') if goat.birth_date else 'Unknown')
-            ws.cell(row=row_num, column=5, value=goat.color or 'Unknown')
-            ws.cell(row=row_num, column=6, value=measurements.count())
+            ws.cell(row=row_num, column=4, value=goat.age_months if goat.age_months else 'Unknown')
+            ws.cell(row=row_num, column=5, value=goat.get_sex_display() if goat.sex else 'Unknown')
+            ws.cell(row=row_num, column=6, value=float(goat.weight_kg) if goat.weight_kg else 'Unknown')
+            ws.cell(row=row_num, column=7, value=measurements.count())
             
             latest = measurements.order_by('-measurement_date').first()
-            ws.cell(row=row_num, column=7, value=latest.measurement_date.strftime('%Y-%m-%d') if latest else 'N/A')
+            ws.cell(row=row_num, column=8, value=latest.measurement_date.strftime('%Y-%m-%d') if latest else 'N/A')
             
             avg_confidence = measurements.aggregate(avg_conf=models.Avg('confidence_score'))['avg_conf']
-            ws.cell(row=row_num, column=8, value=round(avg_confidence, 3) if avg_confidence else 'N/A')
+            ws.cell(row=row_num, column=9, value=round(avg_confidence, 3) if avg_confidence else 'N/A')
     
     def _create_analysis_sheet(self, measurements_queryset):
         """Create statistical analysis sheet"""
@@ -222,11 +219,11 @@ class GoatMeasurementExporter:
         # Field mappings for analysis
         measurement_fields = {
             'Height at Withers': 'hauteur_au_garrot',
-            'Body Length': 'longueur_du_corps',
+            'Body Length': 'body_length',
             'Chest Circumference': 'tour_de_poitrine',
-            'Height at Croup': 'hauteur_a_la_croupe',
-            'Chest Width': 'largeur_de_poitrine',
-            'Hip Width': 'largeur_aux_hanches',
+            'Height at Croup': 'hauteur_au_sacrum',
+            'Chest Width': 'largeur_poitrine',
+            'Hip Width': 'largeur_hanche',
         }
         
         # Create analysis table

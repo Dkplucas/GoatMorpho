@@ -24,8 +24,12 @@
         </p>
         {% endif %}
         <small class="text-muted">
-          <i class="fas fa-calendar"></i> Member since {{
-          user.date_joined|date:"F Y" }}
+          <i class="fas fa-calendar"></i> Member since 
+          {% if user.date_joined %}
+            {{ user.date_joined|date:"F Y" }}
+          {% else %}
+            Recently
+          {% endif %}
         </small>
       </div>
     </div>
@@ -47,8 +51,12 @@
         </div>
         <hr />
         <small class="text-muted">
-          <i class="fas fa-clock"></i> Last activity: {{
-          profile.last_activity|timesince }} ago
+          <i class="fas fa-clock"></i> Last activity: 
+          {% if profile.last_activity %}
+            {{ profile.last_activity|timesince }} ago
+          {% else %}
+            No recent activity
+          {% endif %}
         </small>
       </div>
     </div>

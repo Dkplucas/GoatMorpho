@@ -416,3 +416,211 @@ Not Found: /favicon.ico
 "GET /register/ HTTP/1.1" 200 11492
 "GET /register/ HTTP/1.1" 200 11492
 "GET /register/ HTTP/1.1" 200 11492
+"GET / HTTP/1.1" 200 14386
+"GET /accounts/login/ HTTP/1.1" 200 6645
+"GET /register/ HTTP/1.1" 200 11492
+"GET /accounts/login/ HTTP/1.1" 200 6645
+"POST /accounts/login/ HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 24066
+"GET /upload/ HTTP/1.1" 200 21030
+"GET /upload/ HTTP/1.1" 200 21030
+"GET /profile/ HTTP/1.1" 200 14283
+"GET /profile/ HTTP/1.1" 200 14284
+"GET /profile/ HTTP/1.1" 200 14282
+"GET /dashboard/ HTTP/1.1" 200 24066
+"GET /upload/ HTTP/1.1" 200 21030
+"GET /profile/ HTTP/1.1" 200 14282
+"GET /export-options/ HTTP/1.1" 200 15437
+Error creating Excel export: 'MorphometricMeasurement' object has no attribute 'longueur_du_corps'
+"GET /export-excel/?goat_id=4de74e08-6b5e-492b-b15e-a8dae113e4a4&date_from=&date_to= HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 24438
+"GET /export-options/ HTTP/1.1" 200 15437
+Error creating Excel export: 'Goat' object has no attribute 'birth_date'
+"GET /export-excel/?goat_id=3006b20f-aab5-4d71-9192-7b1bf5cf96ad&date_from=&date_to= HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 24412
+"GET /export-options/ HTTP/1.1" 200 15437
+Error creating Excel export: 'MorphometricMeasurement' object has no attribute 'longueur_du_corps'
+"GET /export-excel/?goat_id=&date_from=&date_to= HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 24438
+"GET /export-options/ HTTP/1.1" 200 15437
+Error creating Excel export: 'Goat' object has no attribute 'birth_date'
+"GET /export-excel/?goat_id=3005272a-f0a8-42bb-80f2-d5df1a568138&date_from=&date_to= HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 24412
+"GET /profile/ HTTP/1.1" 200 14282
+"GET /export-options/ HTTP/1.1" 200 15437
+Error creating Excel export: 'Goat' object has no attribute 'birth_date'
+"GET /export-excel/?goat_id=df0a3f6b-e3ec-4536-b10d-fb66b9e104f7&date_from=&date_to= HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 24412
+Error creating Excel export: 'Goat' object has no attribute 'birth_date'
+"GET /export-excel/?goat_id=df0a3f6b-e3ec-4536-b10d-fb66b9e104f7&date_from=&date_to= HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 24412
+F:\Database\Deploy\GoatMorpho\measurements\excel_export.py changed, reloading.
+Watching for file changes with StatReloader
+F:\Database\Deploy\GoatMorpho\measurements\excel_export.py changed, reloading.
+Watching for file changes with StatReloader
+F:\Database\Deploy\GoatMorpho\measurements\excel_export.py changed, reloading.
+Watching for file changes with StatReloader
+F:\Database\Deploy\GoatMorpho\measurements\excel_export.py changed, reloading.
+Watching for file changes with StatReloader
+F:\Database\Deploy\GoatMorpho\measurements\excel_export.py changed, reloading.
+Watching for file changes with StatReloader
+F:\Database\Deploy\GoatMorpho\measurements\excel_export.py changed, reloading.
+Watching for file changes with StatReloader
+F:\Database\Deploy\GoatMorpho\measurements\excel_export.py changed, reloading.
+Watching for file changes with StatReloader
+F:\Database\Deploy\GoatMorpho\measurements\excel_export.py changed, reloading.
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+F:\Database\Deploy\GoatMorpho\measurements\excel_export.py changed, reloading.
+F:\Database\Deploy\GoatMorpho\measurements\excel_export.py changed, reloading.
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+"GET /export-options/ HTTP/1.1" 200 15437
+Error creating Excel export: 'Goat' object has no attribute 'birth_date'
+"GET /export-excel/?goat_id=7306bead-30cd-4679-b8e7-66d625e10e2d&date_from=&date_to= HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 24412
+"GET / HTTP/1.1" 200 15972
+"GET / HTTP/1.1" 200 15972
+"GET /dashboard/ HTTP/1.1" 200 24066
+"GET /upload/ HTTP/1.1" 200 21030
+"GET /export-options/ HTTP/1.1" 200 15437
+Error creating Excel export: 'Goat' object has no attribute 'birth_date'
+"GET /export-excel/?goat_id=3005272a-f0a8-42bb-80f2-d5df1a568138&date_from=2025-07-02&date_to=2025-07-10 HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 24412
+"GET /export-options/ HTTP/1.1" 200 15437
+Error creating Excel export: 'Goat' object has no attribute 'birth_date'
+"GET /export-excel/?goat_id=5628973d-81c3-422c-95d5-c1b330fe5b03&date_from=2025-07-02&date_to=2025-08-22 HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 24412
+"GET /dashboard/ HTTP/1.1" 200 24066
+"GET /admin/ HTTP/1.1" 200 9734
+"GET /static/admin/css/base.css HTTP/1.1" 200 22120
+"GET /static/admin/css/dark_mode.css HTTP/1.1" 200 2808
+"GET /static/admin/js/theme.js HTTP/1.1" 200 1653
+"GET /static/admin/css/nav_sidebar.css HTTP/1.1" 200 2810
+"GET /static/admin/css/dashboard.css HTTP/1.1" 200 441
+"GET /static/admin/css/responsive.css HTTP/1.1" 200 16565
+"GET /static/admin/js/nav_sidebar.js HTTP/1.1" 200 3063
+"GET /static/admin/img/icon-changelink.svg HTTP/1.1" 200 380
+"GET /static/admin/img/icon-addlink.svg HTTP/1.1" 200 331
+"GET /upload/ HTTP/1.1" 200 21030
+"GET /export-options/ HTTP/1.1" 200 15437
+Error creating Excel export: 'Goat' object has no attribute 'birth_date'
+"GET /export-excel/?goat_id=fe6f9dbe-dd17-4b5f-8e81-607fef870fdc&date_from=2025-01-01&date_to=2025-07-31 HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 24412
+"GET /dashboard/ HTTP/1.1" 302 0
+"GET /accounts/login/?next=/dashboard/ HTTP/1.1" 200 6645
+"GET /accounts/login/ HTTP/1.1" 200 6645
+"GET / HTTP/1.1" 200 14386
+"GET /accounts/login/ HTTP/1.1" 200 6645
+"POST /accounts/login/ HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 24066
+"GET /export-options/ HTTP/1.1" 200 15437
+Error creating Excel export: 'Goat' object has no attribute 'birth_date'
+"GET /export-excel/?goat_id=124f9c9d-884c-4baf-8cf2-c36d79cbe84f&date_from=2025-07-17&date_to=2025-07-02 HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 24412
+"GET /export-options/ HTTP/1.1" 200 15437
+Error creating Excel export: 'Goat' object has no attribute 'birth_date'
+"GET /export-excel/?goat_id=897b9173-6135-42e9-b7d3-d3be2a35b982&date_from=&date_to= HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 24412
+"GET /export-options/ HTTP/1.1" 200 15437
+Error creating Excel export: 'Goat' object has no attribute 'birth_date'
+"GET /export-excel/?goat_id=76cf4f6e-fad2-4e3a-98e7-6bb7cce49daf&date_from=2025-07-03&date_to=2025-08-01 HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 24412
+"GET /logout-confirm/ HTTP/1.1" 200 9646
+"GET /dashboard/ HTTP/1.1" 200 24066
+"GET /export-options/ HTTP/1.1" 200 15437
+Error creating Excel export: 'Goat' object has no attribute 'birth_date'
+"GET /export-excel/?goat_id=&date_from=&date_to= HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 24412
+"GET /export-options/ HTTP/1.1" 200 15437
+Error creating Excel export: 'Goat' object has no attribute 'birth_date'
+"GET /export-excel/?goat_id=&date_from=2025-07-02&date_to=2025-07-25 HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 24412
+F:\Database\Deploy\GoatMorpho\measurements\excel_export.py changed, reloading.
+F:\Database\Deploy\GoatMorpho\measurements\excel_export.py changed, reloading.
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+F:\Database\Deploy\GoatMorpho\measurements\excel_export.py changed, reloading.
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+"GET /dashboard/ HTTP/1.1" 200 24066
+"GET /export-options/ HTTP/1.1" 200 15437
+"GET /export-excel/?goat_id=622a2515-c5e8-4a66-a4fc-f959ca58ba03&date_from=2025-07-03&date_to=2025-07-25 HTTP/1.1" 200 8511
+"GET / HTTP/1.1" 200 15972
+"GET /dashboard/ HTTP/1.1" 200 24066
+"GET /upload/ HTTP/1.1" 200 21030
+MediaPipe initialized successfully
+Processing uploaded image: images.jpeg, size: 9262
+Image decoded successfully. Shape: (225, 225, 3)
+MediaPipe processing completed
+Extracted 17 keypoints
+Calculated 7 measurements
+"POST /api/upload/ HTTP/1.1" 201 3810
+"GET / HTTP/1.1" 200 15972
+"GET /dashboard/ HTTP/1.1" 200 25113
+"GET /admin/ HTTP/1.1" 200 9734
+"GET /static/admin/css/base.css HTTP/1.1" 200 22120
+"GET /static/admin/css/dark_mode.css HTTP/1.1" 200 2808
+"GET /static/admin/js/theme.js HTTP/1.1" 200 1653
+"GET /static/admin/css/nav_sidebar.css HTTP/1.1" 200 2810
+"GET /static/admin/css/dashboard.css HTTP/1.1" 200 441
+"GET /static/admin/css/responsive.css HTTP/1.1" 200 16565
+"GET /static/admin/js/nav_sidebar.js HTTP/1.1" 200 3063
+"GET /static/admin/img/icon-addlink.svg HTTP/1.1" 200 331
+"GET /static/admin/img/icon-changelink.svg HTTP/1.1" 200 380
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 7859
+"GET /admin/measurements/goat/ HTTP/1.1" 200 30443
+"GET /static/admin/css/changelists.css HTTP/1.1" 200 6878
+"GET /admin/jsi18n/ HTTP/1.1" 200 3342
+"GET /static/admin/js/jquery.init.js HTTP/1.1" 200 347
+"GET /static/admin/js/core.js HTTP/1.1" 200 6208
+"GET /static/admin/js/vendor/jquery/jquery.js HTTP/1.1" 200 285314
+"GET /static/admin/js/urlify.js HTTP/1.1" 200 7887
+"GET /static/admin/js/admin/RelatedObjectLookups.js HTTP/1.1" 200 9777
+"GET /static/admin/js/actions.js HTTP/1.1" 200 8076
+"GET /static/admin/js/prepopulate.js HTTP/1.1" 200 1531
+"GET /static/admin/img/search.svg HTTP/1.1" 200 458
+"GET /static/admin/js/vendor/xregexp/xregexp.js HTTP/1.1" 200 325171
+"GET /static/admin/js/filters.js HTTP/1.1" 200 978
+"GET /static/admin/img/tooltag-add.svg HTTP/1.1" 200 331
+"GET /static/admin/img/icon-viewlink.svg HTTP/1.1" 200 581
+"GET /admin/measurements/keypoint/ HTTP/1.1" 200 72798
+"GET /admin/jsi18n/ HTTP/1.1" 200 3342
+"GET /static/admin/img/icon-no.svg HTTP/1.1" 200 560
+"GET /admin/measurements/measurementsession/ HTTP/1.1" 200 12369
+"GET /admin/jsi18n/ HTTP/1.1" 200 3342
+"GET /admin/measurements/morphometricmeasurement/ HTTP/1.1" 200 19157
+"GET /admin/jsi18n/ HTTP/1.1" 200 3342
+"GET /static/admin/img/sorting-icons.svg HTTP/1.1" 200 1097
+"GET /admin/measurements/goat/ HTTP/1.1" 200 30443
+"GET /admin/jsi18n/ HTTP/1.1" 200 3342
+"GET /admin/measurements/goat/fe6f9dbe-dd17-4b5f-8e81-607fef870fdc/change/ HTTP/1.1" 200 17425
+"GET /static/admin/css/forms.css HTTP/1.1" 200 8525
+"GET /admin/jsi18n/ HTTP/1.1" 200 3342
+"GET /static/admin/js/prepopulate_init.js HTTP/1.1" 200 586
+"GET /static/admin/css/widgets.css HTTP/1.1" 200 11991
+"GET /static/admin/js/change_form.js HTTP/1.1" 200 606
+"GET /admin/measurements/keypoint/ HTTP/1.1" 200 72798
+"GET /admin/jsi18n/ HTTP/1.1" 200 3342
+"GET /admin/measurements/keypoint/99/change/ HTTP/1.1" 200 16121
+"GET /admin/jsi18n/ HTTP/1.1" 200 3342
+"GET /admin/measurements/measurementsession/ HTTP/1.1" 200 12369
+"GET /admin/jsi18n/ HTTP/1.1" 200 3342
+"GET /admin/measurements/morphometricmeasurement/ HTTP/1.1" 200 19157
+"GET /admin/jsi18n/ HTTP/1.1" 200 3342
+"GET /admin/measurements/morphometricmeasurement/8a32d757-59ba-49d1-b262-b5c01c7d151d/change/ HTTP/1.1" 200 76342
+"GET /admin/jsi18n/ HTTP/1.1" 200 3342
+"GET /static/admin/js/inlines.js HTTP/1.1" 200 15628
+"GET /static/admin/img/icon-unknown.svg HTTP/1.1" 200 655
+"GET / HTTP/1.1" 200 15972
+"GET /logout-confirm/ HTTP/1.1" 200 9646
+"POST /logout-confirm/ HTTP/1.1" 302 0
+"GET /accounts/login/ HTTP/1.1" 200 6645
+"GET /register/ HTTP/1.1" 200 11492
+"POST /register/ HTTP/1.1" 200 12058
+"POST /register/ HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 10651
+"GET /upload/ HTTP/1.1" 200 17595
+Method Not Allowed (GET): /accounts/logout/
+"GET /accounts/logout/ HTTP/1.1" 405 0
