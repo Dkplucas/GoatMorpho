@@ -626,3 +626,4 @@ Method Not Allowed (GET): /accounts/logout/
 "GET /accounts/logout/ HTTP/1.1" 405 0
 F:\Database\Deploy\GoatMorpho\goat_morpho\settings.py changed, reloading.
 Watching for file changes with StatReloader
+F:\Database\Deploy\GoatMorpho\goat_morpho\settings.py changed, reloading.
