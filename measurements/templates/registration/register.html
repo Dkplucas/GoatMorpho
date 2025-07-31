@@ -5,12 +5,12 @@
 {% block extra_css %}
 <style>
 .register-card .btn-primary {
-  background-color: #f17226;
-  border-color: #f17226;
+  background-color: #f17226 !important;
+  border-color: #f17226 !important;
 }
 .register-card .btn-primary:hover {
-  background-color: #d8611d;
-  border-color: #d8611d;
+  background-color: #d8611d !important;
+  border-color: #d8611d !important;
 }
 .register-card a {
   color: #f17226 !important;
@@ -21,12 +21,18 @@
 .register-card .card-header.bg-primary {
   background-color: #f17226 !important;
 }
+.register-card .card-header {
+  background-color: #f17226 !important;
+}
+.text-primary {
+  color: #f17226 !important;
+}
 </style>
 {% endblock %}
 
 {% block content %}
 <div class="row justify-content-center">
-  <div class="col-md-6">
+  <div class="col-md-4">
     <div class="card register-card" style="border-radius: 0.5rem;">
       <div class="card-header bg-primary text-white">
         <h3 class="text-center mb-0">
