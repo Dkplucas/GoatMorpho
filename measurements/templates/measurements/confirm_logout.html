@@ -63,13 +63,12 @@
         </h6>
         <div class="row text-center">
           <div class="col-4">
-            <strong class="text-primary">{{ user.goat_set.count }}</strong>
+            <strong class="text-primary">{{ user.goats.count }}</strong>
             <br /><small class="text-muted">Goats</small>
           </div>
           <div class="col-4">
             <strong class="text-success"
-              >{{ user.goat_set.aggregate.total_measurements|default:0
-              }}</strong
+              >{{ total_measurements|default:0 }}</strong
             >
             <br /><small class="text-muted">Measurements</small>
           </div>

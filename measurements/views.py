@@ -298,7 +298,14 @@ def confirm_logout_view(request):
         logout(request)
         return redirect('login')
     
-    return render(request, 'measurements/confirm_logout.html')
+    # Calculate total measurements for the user
+    total_measurements = MorphometricMeasurement.objects.filter(goat__owner=request.user).count()
+    
+    context = {
+        'total_measurements': total_measurements,
+    }
+    
+    return render(request, 'measurements/confirm_logout.html', context)
 
 
 def register_view(request):

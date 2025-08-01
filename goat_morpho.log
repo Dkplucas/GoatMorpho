@@ -628,3 +628,55 @@ F:\Database\Deploy\GoatMorpho\goat_morpho\settings.py changed, reloading.
 Watching for file changes with StatReloader
 F:\Database\Deploy\GoatMorpho\goat_morpho\settings.py changed, reloading.
 Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 14386
+"GET /static/images/goat_logo.svg HTTP/1.1" 200 31131
+"GET /static/images/goat-illu.png HTTP/1.1" 200 1376662
+"GET /static/images/favicon.ico HTTP/1.1" 200 15406
+"GET /accounts/login/ HTTP/1.1" 200 6645
+"POST /accounts/login/ HTTP/1.1" 302 0
+"GET /dashboard/ HTTP/1.1" 200 25113
+"GET /logout-confirm/ HTTP/1.1" 200 9646
+"GET /dashboard/ HTTP/1.1" 200 25113
+"GET /logout-confirm/ HTTP/1.1" 200 9646
+"GET /dashboard/ HTTP/1.1" 200 25113
+"GET /logout-confirm/ HTTP/1.1" 200 9646
+"GET /dashboard/ HTTP/1.1" 200 25113
+F:\Database\Deploy\GoatMorpho\measurements\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /logout-confirm/ HTTP/1.1" 200 9577
+Method Not Allowed (GET): /accounts/logout/
+"GET /accounts/logout/ HTTP/1.1" 405 0
+Method Not Allowed (GET): /accounts/logout/
+"GET /accounts/logout/ HTTP/1.1" 405 0
+Method Not Allowed (GET): /accounts/logout/
+"GET /accounts/logout/ HTTP/1.1" 405 0
+"GET /dashboard/ HTTP/1.1" 200 25113
+Method Not Allowed (GET): /accounts/logout/
+"GET /accounts/logout/ HTTP/1.1" 405 0
+"GET /export-options/ HTTP/1.1" 200 15616
+"GET /profile/ HTTP/1.1" 200 14283
+"GET /profile/ HTTP/1.1" 200 14283
+"GET /upload/ HTTP/1.1" 200 21156
+"GET /dashboard/ HTTP/1.1" 200 25113
+"GET / HTTP/1.1" 200 15972
+"GET /dashboard/ HTTP/1.1" 200 25113
+"GET /upload/ HTTP/1.1" 200 21156
+"GET /profile/ HTTP/1.1" 200 14283
+"GET /export-options/ HTTP/1.1" 200 15616
+"GET /admin/ HTTP/1.1" 200 9734
+"GET /static/admin/css/base.css HTTP/1.1" 200 22120
+"GET /static/admin/css/dark_mode.css HTTP/1.1" 200 2808
+"GET /static/admin/css/nav_sidebar.css HTTP/1.1" 200 2810
+"GET /static/admin/css/dashboard.css HTTP/1.1" 200 441
+"GET /static/admin/css/responsive.css HTTP/1.1" 200 16565
+"GET /static/admin/js/theme.js HTTP/1.1" 200 1653
+"GET /static/admin/js/nav_sidebar.js HTTP/1.1" 200 3063
+"GET /static/admin/img/icon-addlink.svg HTTP/1.1" 200 331
+"GET /static/admin/img/icon-changelink.svg HTTP/1.1" 200 380
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 7859
+"GET /logout-confirm/ HTTP/1.1" 200 9577
+"GET /dashboard/ HTTP/1.1" 200 25113
+Method Not Allowed (GET): /accounts/logout/
+"GET /accounts/logout/ HTTP/1.1" 405 0
