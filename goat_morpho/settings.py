@@ -1,5 +1,8 @@
 import os
+import sys
+import io
 from pathlib import Path
+sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -12,7 +15,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-w_&2ei37mfaexa#u!u&10((7*3$a-&+oe7!84paf9d*pn@5oc!')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DJANGO_DEBUG', 'False') == 'False'
+DEBUG = os.environ.get('DJANGO_DEBUG', 'False').lower() == 'true'
 
 ALLOWED_HOSTS = [
     'goatmorpho.info',  # Your primary domain
@@ -40,6 +43,28 @@ INSTALLED_APPS = [
     # Local apps
     'measurements',
 ]
+
+# REST Framework Configuration
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+    'DEFAULT_THROTTLE_CLASSES': [
+        'rest_framework.throttling.AnonRateThrottle',
+        'rest_framework.throttling.UserRateThrottle'
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        'anon': '100/hour',
+        'user': '1000/hour',
+        'upload': '50/hour',  # Special rate for image uploads
+    },
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 20
+}
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
@@ -74,16 +99,34 @@ WSGI_APPLICATION = 'goat_morpho.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
+# Force SQLite for development
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('DB_NAME', 'goat_morpho'),
-        'USER': os.environ.get('DB_USER', 'goat_morpho_user'),
-        'PASSWORD': os.environ.get('DB_PASSWORD', '123456789'),
-        'HOST': os.environ.get('DB_HOST', 'localhost'),
-        'PORT': os.environ.get('DB_PORT', '5432'),
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+# Uncomment below for PostgreSQL in production
+# if 'test' in sys.argv or os.environ.get('TESTING') or os.environ.get('DJANGO_DEBUG', 'False').lower() == 'true':
+#     # Use SQLite for testing and development
+#     DATABASES = {
+#         'default': {
+#             'ENGINE': 'django.db.backends.sqlite3',
+#             'NAME': BASE_DIR / 'db.sqlite3',
+#         }
+#     }
+# else:
+#     DATABASES = {
+#         'default': {
+#             'ENGINE': 'django.db.backends.postgresql',
+#             'NAME': os.environ.get('DB_NAME', 'goat_morpho'),
+#             'USER': os.environ.get('DB_USER', 'goat_morpho_user'),
+#             'PASSWORD': os.environ.get('DB_PASSWORD', '123456789'),
+#             'HOST': os.environ.get('DB_HOST', 'localhost'),
+#             'PORT': os.environ.get('DB_PORT', '5432'),
+#         }
+#     }
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
@@ -165,18 +208,81 @@ DATA_UPLOAD_MAX_MEMORY_SIZE = 10485760  # 10MB
 
 # Email settings
 EMAIL_HOST = os.environ.get('EMAIL_HOST', 'smtp.gmail.com')
-EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', 'dossoukponganfleming@gmail.com')
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', 'Fleming.lucas')
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', '')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
+EMAIL_PORT = int(os.environ.get('EMAIL_PORT', '587'))
+EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS', 'True').lower() == 'true'
 DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', 'noreply@goatmorpho.info')
 
 # Redis/Celery settings (if you use them)
 REDIS_HOST = os.environ.get('REDIS_HOST', '127.0.0.1')
 REDIS_PORT = 6379
 
+# Cache Configuration
+try:
+    import django_redis
+    CACHES = {
+        'default': {
+            'BACKEND': 'django_redis.cache.RedisCache',
+            'LOCATION': f'redis://{REDIS_HOST}:{REDIS_PORT}/1',
+            'OPTIONS': {
+                'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+            },
+            'KEY_PREFIX': 'goatmorpho',
+            'TIMEOUT': 300,  # 5 minutes default
+        }
+    }
+    # Session Configuration
+    SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+    SESSION_CACHE_ALIAS = 'default'
+except ImportError:
+    # Fallback to local memory cache if Redis is not available
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+            'LOCATION': 'goatmorpho-cache',
+            'TIMEOUT': 300,
+            'OPTIONS': {
+                'MAX_ENTRIES': 1000,
+                'CULL_FREQUENCY': 3,
+            }
+        }
+    }
+
 # CV Processing URL
 CV_PROCESSING_URL = os.environ.get('CV_PROCESSING_URL', 'http://127.0.0.1:8001')
+
+# AI/ML Configuration
+AI_ML_SETTINGS = {
+    'ENABLE_ADVANCED_CV': os.environ.get('ENABLE_ADVANCED_CV', 'True').lower() == 'true',
+    'ENABLE_BREED_MODELS': os.environ.get('ENABLE_BREED_MODELS', 'True').lower() == 'true',
+    'ENABLE_USER_MODELS': os.environ.get('ENABLE_USER_MODELS', 'True').lower() == 'true',
+    'MODEL_DIR': os.path.join(BASE_DIR, 'measurements', 'ml_models'),
+    'MIN_TRAINING_SAMPLES': int(os.environ.get('MIN_TRAINING_SAMPLES', '50')),
+    'DEFAULT_CONFIDENCE_THRESHOLD': float(os.environ.get('CONFIDENCE_THRESHOLD', '0.7')),
+    'ENABLE_UNCERTAINTY_QUANTIFICATION': os.environ.get('ENABLE_UNCERTAINTY', 'True').lower() == 'true',
+    'BOOTSTRAP_SAMPLES': int(os.environ.get('BOOTSTRAP_SAMPLES', '50')),
+    'ANOMALY_DETECTION_CONTAMINATION': float(os.environ.get('ANOMALY_CONTAMINATION', '0.1')),
+    'AUTO_RETRAIN_MODELS': os.environ.get('AUTO_RETRAIN_MODELS', 'False').lower() == 'true',
+    'RETRAIN_THRESHOLD_DAYS': int(os.environ.get('RETRAIN_THRESHOLD_DAYS', '30')),
+}
+
+# Image Processing Configuration
+IMAGE_PROCESSING_SETTINGS = {
+    'ENABLE_IMAGE_ENHANCEMENT': os.environ.get('ENABLE_IMAGE_ENHANCEMENT', 'True').lower() == 'true',
+    'ENABLE_ENSEMBLE_DETECTION': os.environ.get('ENABLE_ENSEMBLE_DETECTION', 'True').lower() == 'true',
+    'MIN_IMAGE_QUALITY_SCORE': float(os.environ.get('MIN_IMAGE_QUALITY', '0.3')),
+    'MAX_IMAGE_SIZE': int(os.environ.get('MAX_IMAGE_SIZE', '1920')),
+    'ENABLE_BLUR_DETECTION': os.environ.get('ENABLE_BLUR_DETECTION', 'True').lower() == 'true',
+    'ENABLE_CONTRAST_ENHANCEMENT': os.environ.get('ENABLE_CONTRAST_ENHANCEMENT', 'True').lower() == 'true',
+}
+
+# Performance Monitoring
+PERFORMANCE_MONITORING = {
+    'TRACK_PROCESSING_TIME': os.environ.get('TRACK_PROCESSING_TIME', 'True').lower() == 'true',
+    'TRACK_MODEL_PERFORMANCE': os.environ.get('TRACK_MODEL_PERFORMANCE', 'True').lower() == 'true',
+    'PERFORMANCE_LOG_FILE': os.path.join(BASE_DIR, 'ai_performance.log'),
+}
 
 # Logging configuration
 LOGGING = {

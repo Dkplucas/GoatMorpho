@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
+from django.core.exceptions import ValidationError
+from django.core.validators import MinValueValidator, MaxValueValidator
 import uuid
 
 
@@ -18,11 +20,16 @@ class UserProfile(models.Model):
 
     def update_measurement_count(self):
         """Update the total measurement count"""
-        from .models import MorphometricMeasurement  # Avoid circular import
+        # Fixed circular import issue
         self.total_measurements = MorphometricMeasurement.objects.filter(
             goat__owner=self.user
         ).count()
         self.save()
+        
+    def clean(self):
+        """Model validation"""
+        if self.total_measurements < 0:
+            raise ValidationError('Total measurements cannot be negative')
 
 
 class Goat(models.Model):
@@ -35,10 +42,26 @@ class Goat(models.Model):
         ('M', 'Male'),
         ('F', 'Female')
     ], blank=True, null=True)
-    weight_kg = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
+    weight_kg = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True,
+                                   validators=[MinValueValidator(0.1), MaxValueValidator(200.0)])
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='goats')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['-created_at']
+        indexes = [
+            models.Index(fields=['owner', '-created_at']),
+            models.Index(fields=['breed']),
+        ]
+
+    def clean(self):
+        """Model validation"""
+        if self.age_months and self.age_months > 300:  # 25 years max
+            raise ValidationError('Age seems unrealistic for a goat')
+        if self.weight_kg and self.age_months:
+            if self.age_months < 6 and self.weight_kg > 50:  # Young goat weight check
+                raise ValidationError('Weight seems too high for a young goat')
 
     def __str__(self):
         return f"{self.name or 'Unnamed Goat'} - {self.id}"
@@ -104,18 +127,40 @@ class MorphometricMeasurement(models.Model):
     ], default='AUTO')
     
     confidence_score = models.DecimalField(max_digits=4, decimal_places=3, null=True, blank=True,
-                                         help_text="AI confidence score (0-1)")
+                                         help_text="AI confidence score (0-1)",
+                                         validators=[MinValueValidator(0.0), MaxValueValidator(1.0)])
     measurement_date = models.DateTimeField(auto_now_add=True)
     measured_by = models.ForeignKey(User, on_delete=models.CASCADE)
     
     # Reference object for scale (optional)
     reference_object_length_cm = models.DecimalField(max_digits=6, decimal_places=2, null=True, blank=True,
-                                                   help_text="Known length of reference object in image")
+                                                   help_text="Known length of reference object in image",
+                                                   validators=[MinValueValidator(0.1)])
     
     notes = models.TextField(blank=True, null=True)
 
     class Meta:
         ordering = ['-measurement_date']
+        indexes = [
+            models.Index(fields=['measurement_date']),
+            models.Index(fields=['goat', 'measurement_date']),
+            models.Index(fields=['measured_by']),
+            models.Index(fields=['measurement_method']),
+        ]
+
+    def clean(self):
+        """Model validation for anatomical consistency"""
+        # Basic anatomical relationship checks
+        if self.body_length and self.hauteur_au_garrot:
+            if self.body_length < self.hauteur_au_garrot * 0.3:
+                raise ValidationError('Body length seems too small relative to height')
+            if self.body_length > self.hauteur_au_garrot * 2.5:
+                raise ValidationError('Body length seems too large relative to height')
+        
+        # Confidence score validation
+        if self.confidence_score is not None:
+            if self.confidence_score < 0 or self.confidence_score > 1:
+                raise ValidationError('Confidence score must be between 0 and 1')
 
     def __str__(self):
         return f"Measurements for {self.goat.name or self.goat.id} - {self.measurement_date.strftime('%Y-%m-%d')}"
@@ -149,6 +194,12 @@ class MeasurementSession(models.Model):
     session_name = models.CharField(max_length=200)
     created_at = models.DateTimeField(auto_now_add=True)
     completed_at = models.DateTimeField(null=True, blank=True)
+    
+    class Meta:
+        ordering = ['-created_at']
+        indexes = [
+            models.Index(fields=['user', '-created_at']),
+        ]
     
     def __str__(self):
         return f"{self.session_name} - {self.user.username}"

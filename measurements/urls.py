@@ -24,6 +24,12 @@ urlpatterns = [
     path('api/measurements/<uuid:measurement_id>/update/', views.update_measurement, name='update_measurement'),
     path('api/statistics/', views.measurement_statistics, name='measurement_statistics'),
     
+    # AI/ML Enhanced API endpoints
+    path('api/ai/predict-measurements/', views.predict_measurements, name='ai_predict_measurements'),
+    path('api/ai/analyze-trends/', views.analyze_measurement_trends, name='ai_analyze_trends'),
+    path('api/ai/insights/', views.get_ai_insights, name='ai_insights'),
+    path('api/ai/train-model/', views.train_user_specific_model, name='ai_train_model'),
+    
     # Web interface views
     path('dashboard/', views.measurement_dashboard, name='dashboard'),
     path('upload/', views.upload_image_view, name='upload_image'),
