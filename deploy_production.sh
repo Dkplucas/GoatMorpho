@@ -75,18 +75,26 @@ sudo apt update && sudo apt upgrade -y
 
 # Detect available Python version
 print_status "Detecting available Python version..."
-if command -v python3.11 >/dev/null 2>&1; then
+if command -v python3.12 >/dev/null 2>&1; then
+    PYTHON_VERSION="3.12"
+elif command -v python3.11 >/dev/null 2>&1; then
     PYTHON_VERSION="3.11"
 elif command -v python3.10 >/dev/null 2>&1; then
     PYTHON_VERSION="3.10"
 elif command -v python3.9 >/dev/null 2>&1; then
     PYTHON_VERSION="3.9"
+elif apt-cache search python3.12-dev | grep -q python3.12-dev; then
+    PYTHON_VERSION="3.12"
 elif apt-cache search python3.11-dev | grep -q python3.11-dev; then
     PYTHON_VERSION="3.11"
 elif apt-cache search python3.10-dev | grep -q python3.10-dev; then
     PYTHON_VERSION="3.10"
 else
-    PYTHON_VERSION="3.9"
+    # Fallback to system python3
+    PYTHON_VERSION=$(python3 --version 2>&1 | grep -oP '(?<=Python )\d+\.\d+' | head -1)
+    if [ -z "$PYTHON_VERSION" ]; then
+        PYTHON_VERSION="3.12"  # Default fallback
+    fi
 fi
 
 print_success "Using Python $PYTHON_VERSION"
@@ -95,17 +103,24 @@ print_success "Using Python $PYTHON_VERSION"
 print_status "Installing required system packages..."
 
 # Core packages that should be available on most systems
+print_status "Installing core packages..."
 sudo apt install -y \
-    python${PYTHON_VERSION} \
-    python${PYTHON_VERSION}-venv \
-    python${PYTHON_VERSION}-dev \
-    python3-pip \
     redis-server \
     nginx \
     git curl wget \
     build-essential \
     libpq-dev \
     supervisor
+
+# Install Python packages with fallback
+print_status "Installing Python packages..."
+# Try version-specific packages first
+if sudo apt install -y python${PYTHON_VERSION} python${PYTHON_VERSION}-venv python${PYTHON_VERSION}-dev python3-pip 2>/dev/null; then
+    print_success "Installed Python ${PYTHON_VERSION} packages"
+else
+    print_warning "Version-specific Python packages not available, using generic python3"
+    sudo apt install -y python3 python3-venv python3-dev python3-pip
+fi
 
 # Additional packages - install if available
 print_status "Installing additional packages (if available)..."
@@ -224,7 +239,14 @@ fi
 
 # Create virtual environment
 print_status "Creating Python virtual environment..."
-python${PYTHON_VERSION} -m venv venv
+# Try version-specific Python first, then fallback to python3
+if command -v python${PYTHON_VERSION} >/dev/null 2>&1; then
+    python${PYTHON_VERSION} -m venv venv
+elif command -v python3 >/dev/null 2>&1; then
+    python3 -m venv venv
+else
+    python -m venv venv
+fi
 source venv/bin/activate
 
 # Upgrade pip and install wheel
