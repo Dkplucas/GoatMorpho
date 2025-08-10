@@ -73,23 +73,60 @@ print_status "  Password: 123456789"
 print_status "Updating system packages..."
 sudo apt update && sudo apt upgrade -y
 
-# Install required packages (excluding PostgreSQL since it exists)
+# Detect available Python version
+print_status "Detecting available Python version..."
+if command -v python3.11 >/dev/null 2>&1; then
+    PYTHON_VERSION="3.11"
+elif command -v python3.10 >/dev/null 2>&1; then
+    PYTHON_VERSION="3.10"
+elif command -v python3.9 >/dev/null 2>&1; then
+    PYTHON_VERSION="3.9"
+elif apt-cache search python3.11-dev | grep -q python3.11-dev; then
+    PYTHON_VERSION="3.11"
+elif apt-cache search python3.10-dev | grep -q python3.10-dev; then
+    PYTHON_VERSION="3.10"
+else
+    PYTHON_VERSION="3.9"
+fi
+
+print_success "Using Python $PYTHON_VERSION"
+
+# Install required packages (compatible with different Ubuntu versions)
 print_status "Installing required system packages..."
+
+# Core packages that should be available on most systems
 sudo apt install -y \
-    python3.11 python3.11-venv python3.11-dev \
+    python${PYTHON_VERSION} \
+    python${PYTHON_VERSION}-venv \
+    python${PYTHON_VERSION}-dev \
+    python3-pip \
     redis-server \
     nginx \
     git curl wget \
     build-essential \
     libpq-dev \
-    libgl1-mesa-glx \
-    libglib2.0-0 \
-    libsm6 \
-    libxext6 \
-    libxrender-dev \
-    libgomp1 \
-    libgtk-3-0 \
     supervisor
+
+# Additional packages - install if available
+print_status "Installing additional packages (if available)..."
+
+# Try to install OpenGL libraries (for OpenCV)
+if apt-cache search libgl1-mesa-glx | grep -q libgl1-mesa-glx; then
+    sudo apt install -y libgl1-mesa-glx
+elif apt-cache search libgl1-mesa-dev | grep -q libgl1-mesa-dev; then
+    sudo apt install -y libgl1-mesa-dev
+else
+    print_warning "OpenGL libraries not found - OpenCV may have display issues"
+fi
+
+# Install other optional packages
+for pkg in libglib2.0-0 libsm6 libxext6 libxrender-dev libgomp1 libgtk-3-0; do
+    if apt-cache search $pkg | grep -q "^$pkg "; then
+        sudo apt install -y $pkg
+    else
+        print_warning "Package $pkg not available - skipping"
+    fi
+done
 
 # Test existing PostgreSQL connection
 print_status "Testing existing PostgreSQL connection..."
@@ -187,8 +224,11 @@ fi
 
 # Create virtual environment
 print_status "Creating Python virtual environment..."
-python3.11 -m venv venv
+python${PYTHON_VERSION} -m venv venv
 source venv/bin/activate
+
+# Upgrade pip and install wheel
+pip install --upgrade pip setuptools wheel
 
 # Install Python dependencies
 print_status "Installing Python dependencies..."
