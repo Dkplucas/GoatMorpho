@@ -100,34 +100,19 @@ WSGI_APPLICATION = 'goat_morpho.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
-# Force SQLite for development
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
-
 # Uncomment below for PostgreSQL in production
 # if 'test' in sys.argv or os.environ.get('TESTING') or os.environ.get('DJANGO_DEBUG', 'False').lower() == 'true':
 #     # Use SQLite for testing and development
-#     DATABASES = {
-#         'default': {
-#             'ENGINE': 'django.db.backends.sqlite3',
-#             'NAME': BASE_DIR / 'db.sqlite3',
-#         }
-#     }
-# else:
-#     DATABASES = {
-#         'default': {
-#             'ENGINE': 'django.db.backends.postgresql',
-#             'NAME': os.environ.get('DB_NAME', 'goat_morpho'),
-#             'USER': os.environ.get('DB_USER', 'goat_morpho_user'),
-#             'PASSWORD': os.environ.get('DB_PASSWORD', '123456789'),
-#             'HOST': os.environ.get('DB_HOST', 'localhost'),
-#             'PORT': os.environ.get('DB_PORT', '5432'),
-#         }
-#     }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ.get('DB_NAME', 'goat_morpho'),
+        'USER': os.environ.get('DB_USER', 'goat_morpho_user'),
+        'PASSWORD': os.environ.get('DB_PASSWORD', '123456789'),
+        'HOST': os.environ.get('DB_HOST', 'localhost'),
+        'PORT': os.environ.get('DB_PORT', '5432'),
+    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
