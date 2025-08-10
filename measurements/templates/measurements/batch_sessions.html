@@ -1,0 +1,158 @@
+{% extends 'measurements/base.html' %}
+
+{% block title %}{{ page_title }}{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col-md-12">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h1>📋 Batch Processing Sessions</h1>
+      <a href="{% url 'measurements:batch_upload' %}" class="btn btn-primary">
+        🚀 New Batch Upload
+      </a>
+    </div>
+
+    {% if sessions %}
+      <div class="row">
+        {% for session in sessions %}
+        <div class="col-md-6 col-lg-4 mb-4">
+          <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+              <h6 class="mb-0">{{ session.session_name|truncatechars:30 }}</h6>
+              <span class="badge 
+                {% if session.status == 'COMPLETED' %}bg-success
+                {% elif session.status == 'FAILED' %}bg-danger
+                {% elif session.status == 'PROCESSING' %}bg-warning
+                {% elif session.status == 'PARTIAL' %}bg-info
+                {% else %}bg-secondary{% endif %}">
+                {{ session.get_status_display }}
+              </span>
+            </div>
+            <div class="card-body">
+              <div class="row text-center mb-3">
+                <div class="col-4">
+                  <div class="text-primary fw-bold">{{ session.total_images }}</div>
+                  <small class="text-muted">Total</small>
+                </div>
+                <div class="col-4">
+                  <div class="text-success fw-bold">{{ session.processed_images }}</div>
+                  <small class="text-muted">Success</small>
+                </div>
+                <div class="col-4">
+                  <div class="text-danger fw-bold">{{ session.failed_images }}</div>
+                  <small class="text-muted">Failed</small>
+                </div>
+              </div>
+
+              <div class="progress mb-3" style="height: 8px;">
+                <div class="progress-bar 
+                  {% if session.status == 'COMPLETED' %}bg-success
+                  {% elif session.status == 'FAILED' %}bg-danger
+                  {% elif session.status == 'PROCESSING' %}bg-warning progress-bar-striped progress-bar-animated
+                  {% else %}bg-info{% endif %}" 
+                  style="width: {{ session.progress_percentage }}%">
+                </div>
+              </div>
+
+              <div class="small text-muted mb-2">
+                <strong>Goat:</strong> {{ session.goat.name|default:"Unnamed Goat" }}
+                {% if session.goat.breed %}<br><strong>Breed:</strong> {{ session.goat.breed }}{% endif %}
+              </div>
+
+              <div class="small text-muted mb-3">
+                <strong>Started:</strong> {{ session.created_at|date:"M d, H:i" }}
+                {% if session.completed_at %}
+                  <br><strong>Completed:</strong> {{ session.completed_at|date:"M d, H:i" }}
+                {% endif %}
+              </div>
+
+              {% if session.status == 'COMPLETED' or session.status == 'PARTIAL' %}
+                <div class="small text-success mb-2">
+                  <strong>Success Rate:</strong> {{ session.success_rate|floatformat:1 }}%
+                </div>
+              {% endif %}
+            </div>
+            <div class="card-footer d-flex justify-content-between">
+              <a href="{% url 'measurements:batch_status' session.id %}" class="btn btn-sm btn-outline-primary">
+                📊 View Details
+              </a>
+              
+              {% if session.status == 'COMPLETED' or session.status == 'PARTIAL' %}
+                <a href="{% url 'measurements:goat_measurements' session.goat.id %}" class="btn btn-sm btn-success">
+                  📈 Results
+                </a>
+              {% elif session.status == 'PROCESSING' %}
+                <span class="badge bg-warning">Processing...</span>
+              {% elif session.failed_images > 0 %}
+                <small class="text-danger">{{ session.failed_images }} failed</small>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+
+      <!-- Pagination if needed -->
+      {% if sessions.has_other_pages %}
+        <nav aria-label="Batch sessions pagination">
+          <ul class="pagination justify-content-center">
+            {% if sessions.has_previous %}
+              <li class="page-item">
+                <a class="page-link" href="?page={{ sessions.previous_page_number }}">Previous</a>
+              </li>
+            {% endif %}
+            
+            {% for num in sessions.paginator.page_range %}
+              {% if sessions.number == num %}
+                <li class="page-item active">
+                  <span class="page-link">{{ num }}</span>
+                </li>
+              {% else %}
+                <li class="page-item">
+                  <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                </li>
+              {% endif %}
+            {% endfor %}
+            
+            {% if sessions.has_next %}
+              <li class="page-item">
+                <a class="page-link" href="?page={{ sessions.next_page_number }}">Next</a>
+              </li>
+            {% endif %}
+          </ul>
+        </nav>
+      {% endif %}
+
+    {% else %}
+      <div class="text-center py-5">
+        <div class="mb-4">
+          <i class="fas fa-images fa-3x text-muted"></i>
+        </div>
+        <h3 class="text-muted">No Batch Sessions Yet</h3>
+        <p class="text-muted mb-4">
+          You haven't uploaded any batches of images yet. 
+          Start by uploading multiple images of the same goat for more accurate measurements.
+        </p>
+        <a href="{% url 'measurements:batch_upload' %}" class="btn btn-primary btn-lg">
+          🚀 Start Your First Batch Upload
+        </a>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+<script>
+// Auto-refresh page every 30 seconds if there are processing sessions
+{% if sessions %}
+  const processingCount = {{ sessions|length|add:0 }}; // Simple count, you'd filter in view
+  {% for session in sessions %}
+    {% if session.status == 'PROCESSING' %}
+      setTimeout(() => {
+        location.reload();
+      }, 30000);
+      break;
+    {% endif %}
+  {% endfor %}
+{% endif %}
+</script>
+{% endblock %}

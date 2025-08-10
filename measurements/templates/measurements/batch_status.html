@@ -1,0 +1,327 @@
+{% extends 'measurements/base.html' %}
+
+{% block title %}{{ page_title }}{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col-md-12">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h1>📊 {{ session.session_name }}</h1>
+      <div>
+        <a href="{% url 'measurements:batch_sessions' %}" class="btn btn-outline-secondary">
+          📋 All Sessions
+        </a>
+        <a href="{% url 'measurements:batch_upload' %}" class="btn btn-outline-primary">
+          🚀 New Batch
+        </a>
+      </div>
+    </div>
+
+    <!-- Session Overview -->
+    <div class="row mb-4">
+      <div class="col-md-3">
+        <div class="card text-center">
+          <div class="card-body">
+            <h5 class="card-title text-primary">{{ session.total_images }}</h5>
+            <p class="card-text">Total Images</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card text-center">
+          <div class="card-body">
+            <h5 class="card-title text-success">{{ session.processed_images }}</h5>
+            <p class="card-text">Processed</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card text-center">
+          <div class="card-body">
+            <h5 class="card-title text-danger">{{ session.failed_images }}</h5>
+            <p class="card-text">Failed</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card text-center">
+          <div class="card-body">
+            <h5 class="card-title text-info">{{ session.progress_percentage|floatformat:1 }}%</h5>
+            <p class="card-text">Progress</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Status and Progress -->
+    <div class="card mb-4">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-8">
+            <h5>Processing Status: 
+              <span class="badge 
+                {% if session.status == 'COMPLETED' %}bg-success
+                {% elif session.status == 'FAILED' %}bg-danger
+                {% elif session.status == 'PROCESSING' %}bg-warning
+                {% elif session.status == 'PARTIAL' %}bg-info
+                {% else %}bg-secondary{% endif %}">
+                {{ session.get_status_display }}
+              </span>
+            </h5>
+            
+            <div class="progress mb-3" style="height: 25px;">
+              <div class="progress-bar 
+                {% if session.status == 'COMPLETED' %}bg-success
+                {% elif session.status == 'FAILED' %}bg-danger
+                {% elif session.status == 'PROCESSING' %}bg-warning progress-bar-striped progress-bar-animated
+                {% else %}bg-info{% endif %}" 
+                role="progressbar" 
+                style="width: {{ session.progress_percentage }}%">
+                {{ session.progress_percentage|floatformat:1 }}%
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6">
+                <strong>Goat:</strong> {{ session.goat.name|default:"Unnamed Goat" }}
+                {% if session.goat.breed %}({{ session.goat.breed }}){% endif %}
+              </div>
+              <div class="col-md-6">
+                <strong>Started:</strong> {{ session.created_at|date:"M d, Y H:i" }}
+              </div>
+            </div>
+            {% if session.completed_at %}
+            <div class="row mt-2">
+              <div class="col-md-6">
+                <strong>Success Rate:</strong> {{ session.success_rate|floatformat:1 }}%
+              </div>
+              <div class="col-md-6">
+                <strong>Completed:</strong> {{ session.completed_at|date:"M d, Y H:i" }}
+              </div>
+            </div>
+            {% endif %}
+          </div>
+          
+          <div class="col-md-4 text-end">
+            {% if session.status == 'PROCESSING' %}
+              <button class="btn btn-outline-secondary" onclick="refreshStatus()" id="refreshBtn">
+                🔄 Refresh Status
+              </button>
+            {% elif session.failed_images > 0 %}
+              <button class="btn btn-warning" onclick="retryFailedImages()" id="retryBtn">
+                🔄 Retry Failed Images
+              </button>
+            {% endif %}
+            
+            {% if session.status == 'COMPLETED' or session.status == 'PARTIAL' %}
+              <a href="{% url 'measurements:goat_measurements' session.goat.id %}" class="btn btn-success mt-2">
+                📊 View Results
+              </a>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Individual Image Status -->
+    <div class="card">
+      <div class="card-header">
+        <h5 class="mb-0">📸 Individual Image Processing Status</h5>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>Image</th>
+                <th>Status</th>
+                <th>Processing Time</th>
+                <th>Results</th>
+                <th>Error</th>
+              </tr>
+            </thead>
+            <tbody id="imageStatusTable">
+              {% for image in batch_images %}
+              <tr data-image-id="{{ image.id }}">
+                <td>
+                  <div class="d-flex align-items-center">
+                    <img src="{{ image.image_file.url }}" alt="Thumbnail" 
+                         class="rounded me-2" style="width: 40px; height: 40px; object-fit: cover;">
+                    <small>{{ image.original_filename }}</small>
+                  </div>
+                </td>
+                <td>
+                  <span class="badge 
+                    {% if image.status == 'COMPLETED' %}bg-success
+                    {% elif image.status == 'FAILED' %}bg-danger
+                    {% elif image.status == 'PROCESSING' %}bg-warning
+                    {% else %}bg-secondary{% endif %}">
+                    {{ image.get_status_display }}
+                  </span>
+                </td>
+                <td>
+                  {% if image.processing_time_seconds %}
+                    {{ image.processing_time_seconds|floatformat:1 }}s
+                  {% else %}
+                    -
+                  {% endif %}
+                </td>
+                <td>
+                  {% if image.measurement %}
+                    <a href="{% url 'measurements:measurement_detail' image.measurement.id %}" 
+                       class="btn btn-sm btn-outline-success">
+                      📊 View
+                    </a>
+                  {% else %}
+                    -
+                  {% endif %}
+                </td>
+                <td>
+                  {% if image.error_message %}
+                    <small class="text-danger" title="{{ image.error_message }}">
+                      {{ image.error_message|truncatechars:50 }}
+                    </small>
+                  {% else %}
+                    -
+                  {% endif %}
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+let refreshInterval;
+
+function refreshStatus() {
+  fetch(`/api/batch-status/{{ session.id }}/`)
+    .then(response => response.json())
+    .then(data => {
+      updateSessionStatus(data.session);
+      updateImageTable(data.batch_images);
+      
+      // Stop auto-refresh if processing is complete
+      if (data.session.status !== 'PROCESSING') {
+        clearInterval(refreshInterval);
+        location.reload(); // Reload to update buttons and final state
+      }
+    })
+    .catch(error => {
+      console.error('Error refreshing status:', error);
+    });
+}
+
+function updateSessionStatus(session) {
+  // Update progress bar
+  const progressBar = document.querySelector('.progress-bar');
+  progressBar.style.width = session.progress_percentage + '%';
+  progressBar.textContent = session.progress_percentage.toFixed(1) + '%';
+  
+  // Update statistics
+  document.querySelector('.text-success h5').textContent = session.processed_images;
+  document.querySelector('.text-danger h5').textContent = session.failed_images;
+  document.querySelector('.text-info h5').textContent = session.progress_percentage.toFixed(1) + '%';
+}
+
+function updateImageTable(images) {
+  const tbody = document.getElementById('imageStatusTable');
+  
+  images.forEach(image => {
+    const row = document.querySelector(`tr[data-image-id="${image.id}"]`);
+    if (row) {
+      // Update status badge
+      const statusBadge = row.querySelector('.badge');
+      statusBadge.className = 'badge ' + getStatusClass(image.status);
+      statusBadge.textContent = getStatusDisplay(image.status);
+      
+      // Update processing time
+      const timeCell = row.cells[2];
+      timeCell.textContent = image.processing_time_seconds ? 
+        image.processing_time_seconds.toFixed(1) + 's' : '-';
+      
+      // Update results link
+      const resultCell = row.cells[3];
+      if (image.measurement_id) {
+        resultCell.innerHTML = `<a href="/measurements/${image.measurement_id}/" class="btn btn-sm btn-outline-success">📊 View</a>`;
+      }
+      
+      // Update error message
+      const errorCell = row.cells[4];
+      if (image.error_message) {
+        errorCell.innerHTML = `<small class="text-danger" title="${image.error_message}">${image.error_message.substring(0, 50)}${image.error_message.length > 50 ? '...' : ''}</small>`;
+      }
+    }
+  });
+}
+
+function getStatusClass(status) {
+  switch(status) {
+    case 'COMPLETED': return 'bg-success';
+    case 'FAILED': return 'bg-danger';
+    case 'PROCESSING': return 'bg-warning';
+    default: return 'bg-secondary';
+  }
+}
+
+function getStatusDisplay(status) {
+  switch(status) {
+    case 'COMPLETED': return 'Completed';
+    case 'FAILED': return 'Failed';
+    case 'PROCESSING': return 'Processing';
+    case 'PENDING': return 'Pending';
+    default: return status;
+  }
+}
+
+function retryFailedImages() {
+  const retryBtn = document.getElementById('retryBtn');
+  retryBtn.disabled = true;
+  retryBtn.innerHTML = '🔄 Retrying...';
+  
+  fetch(`/api/retry-failed/{{ session.id }}/`, {
+    method: 'POST',
+    headers: {
+      'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      'use_advanced_ai': true
+    })
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      // Start auto-refresh for processing
+      startAutoRefresh();
+      location.reload();
+    } else {
+      alert('Error: ' + data.message);
+      retryBtn.disabled = false;
+      retryBtn.innerHTML = '🔄 Retry Failed Images';
+    }
+  })
+  .catch(error => {
+    console.error('Error retrying failed images:', error);
+    retryBtn.disabled = false;
+    retryBtn.innerHTML = '🔄 Retry Failed Images';
+  });
+}
+
+function startAutoRefresh() {
+  // Refresh every 5 seconds during processing
+  refreshInterval = setInterval(refreshStatus, 5000);
+}
+
+// Start auto-refresh if currently processing
+{% if session.status == 'PROCESSING' %}
+document.addEventListener('DOMContentLoaded', function() {
+  startAutoRefresh();
+});
+{% endif %}
+</script>
+{% endblock %}

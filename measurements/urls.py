@@ -33,6 +33,14 @@ urlpatterns = [
     # Web interface views
     path('dashboard/', views.measurement_dashboard, name='dashboard'),
     path('upload/', views.upload_image_view, name='upload_image'),
+    path('batch-upload/', views.batch_upload_view, name='batch_upload'),
+    path('batch-status/<uuid:session_id>/', views.batch_status_view, name='batch_status'),
+    path('batch-sessions/', views.batch_sessions_view, name='batch_sessions'),
+    
+    # Batch processing API endpoints
+    path('api/batch-status/<uuid:session_id>/', views.batch_status_api, name='batch_status_api'),
+    path('api/retry-failed/<uuid:session_id>/', views.retry_failed_images, name='retry_failed_images'),
+    
     path('logout-confirm/', views.confirm_logout_view, name='logout_confirm'),
     path('register/', views.register_view, name='register'),
     path('profile/', views.profile_view, name='profile'),

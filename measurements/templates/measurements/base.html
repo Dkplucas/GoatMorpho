@@ -135,10 +135,28 @@
                 >Dashboard</a
               >
             </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'measurements:upload_image' %}"
-                >Upload Image</a
-              >
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="uploadDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Upload
+              </a>
+              <ul class="dropdown-menu">
+                <li>
+                  <a class="dropdown-item" href="{% url 'measurements:upload_image' %}">
+                    <i class="fas fa-image"></i> Single Image
+                  </a>
+                </li>
+                <li>
+                  <a class="dropdown-item" href="{% url 'measurements:batch_upload' %}">
+                    <i class="fas fa-images"></i> Multiple Images (Batch)
+                  </a>
+                </li>
+                <li><hr class="dropdown-divider" /></li>
+                <li>
+                  <a class="dropdown-item" href="{% url 'measurements:batch_sessions' %}">
+                    <i class="fas fa-history"></i> Processing History
+                  </a>
+                </li>
+              </ul>
             </li>
             {% endif %}
           </ul>

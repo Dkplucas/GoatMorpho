@@ -31,11 +31,11 @@ import base64
 
 logger = logging.getLogger(__name__)
 
-from .models import Goat, MorphometricMeasurement, KeyPoint, MeasurementSession, UserProfile
+from .models import Goat, MorphometricMeasurement, KeyPoint, MeasurementSession, UserProfile, BatchImageUpload
 from .cv_processor import GoatMorphometryProcessor
 from .cv_processor_advanced import AdvancedGoatMorphometryProcessor
 from .ml_trainer_advanced import AdvancedMLTrainer
-from .forms import CustomUserRegistrationForm, UserProfileForm
+from .forms import CustomUserRegistrationForm, UserProfileForm, MultipleImageUploadForm
 from .excel_export import GoatMeasurementExporter
 from .serializers import (
     GoatSerializer, MorphometricMeasurementSerializer,
@@ -1251,3 +1251,317 @@ def home_view(request):
         'is_home_page': True,
     }
     return render(request, 'measurements/home.html', context)
+
+
+@login_required
+def batch_upload_view(request):
+    """View for uploading multiple images of the same goat"""
+    if request.method == 'POST':
+        form = MultipleImageUploadForm(user=request.user, data=request.POST, files=request.FILES)
+        
+        if form.is_valid():
+            # Get or create goat
+            goat = form.cleaned_data.get('goat')
+            if not goat:
+                # Create new goat
+                goat = Goat.objects.create(
+                    name=form.cleaned_data['goat_name'],
+                    breed=form.cleaned_data.get('breed', ''),
+                    age_months=form.cleaned_data.get('age_months'),
+                    sex=form.cleaned_data.get('sex', ''),
+                    weight_kg=form.cleaned_data.get('weight_kg'),
+                    owner=request.user
+                )
+            else:
+                # Update existing goat with new information if provided
+                if form.cleaned_data.get('breed'):
+                    goat.breed = form.cleaned_data['breed']
+                if form.cleaned_data.get('age_months'):
+                    goat.age_months = form.cleaned_data['age_months']
+                if form.cleaned_data.get('sex'):
+                    goat.sex = form.cleaned_data['sex']
+                if form.cleaned_data.get('weight_kg'):
+                    goat.weight_kg = form.cleaned_data['weight_kg']
+                goat.save()
+            
+            # Create measurement session
+            session_name = form.cleaned_data.get('session_name')
+            if not session_name:
+                session_name = f"Batch upload for {goat.name} - {timezone.now().strftime('%Y-%m-%d %H:%M')}"
+            
+            session = MeasurementSession.objects.create(
+                user=request.user,
+                session_name=session_name,
+                goat=goat,
+                total_images=len(form.cleaned_data['images']),
+                status='PENDING'
+            )
+            
+            # Save uploaded images
+            images = form.cleaned_data['images']
+            for index, image in enumerate(images):
+                BatchImageUpload.objects.create(
+                    session=session,
+                    original_filename=image.name,
+                    image_file=image,
+                    order_index=index,
+                    status='PENDING'
+                )
+            
+            # Start processing (you can make this asynchronous with Celery if needed)
+            try:
+                process_batch_images.delay(session.id, form.cleaned_data)
+            except:
+                # Fallback to synchronous processing if Celery is not available
+                process_batch_images_sync(session.id, form.cleaned_data)
+            
+            messages.success(request, f'Successfully uploaded {len(images)} images for processing!')
+            return redirect('measurements:batch_status', session_id=session.id)
+    else:
+        form = MultipleImageUploadForm(user=request.user)
+    
+    context = {
+        'form': form,
+        'page_title': 'Batch Upload - Multiple Images'
+    }
+    return render(request, 'measurements/batch_upload.html', context)
+
+
+@login_required
+def batch_status_view(request, session_id):
+    """View to show batch processing status"""
+    session = get_object_or_404(MeasurementSession, id=session_id, user=request.user)
+    batch_images = BatchImageUpload.objects.filter(session=session).order_by('order_index')
+    
+    context = {
+        'session': session,
+        'batch_images': batch_images,
+        'page_title': f'Batch Processing Status - {session.session_name}'
+    }
+    return render(request, 'measurements/batch_status.html', context)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def batch_status_api(request, session_id):
+    """API endpoint to get batch processing status"""
+    try:
+        session = MeasurementSession.objects.get(id=session_id, user=request.user)
+        batch_images = BatchImageUpload.objects.filter(session=session).order_by('order_index')
+        
+        return Response({
+            'session': {
+                'id': session.id,
+                'session_name': session.session_name,
+                'goat_name': session.goat.name if session.goat else None,
+                'status': session.status,
+                'total_images': session.total_images,
+                'processed_images': session.processed_images,
+                'failed_images': session.failed_images,
+                'progress_percentage': session.progress_percentage,
+                'success_rate': session.success_rate,
+                'created_at': session.created_at,
+                'completed_at': session.completed_at
+            },
+            'batch_images': [
+                {
+                    'id': img.id,
+                    'original_filename': img.original_filename,
+                    'status': img.status,
+                    'error_message': img.error_message,
+                    'processing_time_seconds': img.processing_time_seconds,
+                    'measurement_id': img.measurement.id if img.measurement else None,
+                    'processed_at': img.processed_at
+                }
+                for img in batch_images
+            ]
+        })
+    except MeasurementSession.DoesNotExist:
+        return Response({
+            'error': 'Session not found'
+        }, status=status.HTTP_404_NOT_FOUND)
+
+
+def process_batch_images_sync(session_id, form_data):
+    """Process batch images synchronously"""
+    import time
+    from django.utils import timezone
+    
+    try:
+        session = MeasurementSession.objects.get(id=session_id)
+        session.status = 'PROCESSING'
+        session.save()
+        
+        batch_images = BatchImageUpload.objects.filter(session=session).order_by('order_index')
+        use_advanced_ai = form_data.get('use_advanced_ai', True)
+        reference_length = form_data.get('reference_length_cm')
+        
+        processed_count = 0
+        failed_count = 0
+        
+        for batch_image in batch_images:
+            start_time = time.time()
+            batch_image.status = 'PROCESSING'
+            batch_image.save()
+            
+            try:
+                # Read image data
+                batch_image.image_file.open()
+                image_data = batch_image.image_file.read()
+                
+                if use_advanced_ai:
+                    processor = AdvancedGoatMorphometryProcessor()
+                    result = processor.process_goat_image_advanced(
+                        image_data=image_data,
+                        reference_length=reference_length,
+                        breed=session.goat.breed
+                    )
+                else:
+                    processor = GoatMorphometryProcessor()
+                    # Convert to PIL Image for basic processor
+                    from PIL import Image
+                    import io
+                    pil_image = Image.open(io.BytesIO(image_data))
+                    result = processor.process_goat_image(
+                        pil_image,
+                        reference_length=reference_length
+                    )
+                
+                # Create measurement record
+                measurement = MorphometricMeasurement.objects.create(
+                    goat=session.goat,
+                    original_image=batch_image.image_file,
+                    measured_by=session.user,
+                    measurement_method='AUTO' if use_advanced_ai else 'MANUAL',
+                    confidence_score=result.get('confidence_score'),
+                    reference_object_length_cm=reference_length,
+                    **{k: v for k, v in result.get('measurements', {}).items() if v is not None}
+                )
+                
+                # Save keypoints if available
+                if 'keypoints' in result:
+                    for kp_name, kp_data in result['keypoints'].items():
+                        KeyPoint.objects.create(
+                            measurement=measurement,
+                            name=kp_name,
+                            x_coordinate=kp_data['x'],
+                            y_coordinate=kp_data['y'],
+                            confidence=kp_data.get('confidence')
+                        )
+                
+                # Update batch image
+                batch_image.measurement = measurement
+                batch_image.status = 'COMPLETED'
+                batch_image.processed_at = timezone.now()
+                batch_image.processing_time_seconds = time.time() - start_time
+                batch_image.save()
+                
+                processed_count += 1
+                
+            except Exception as e:
+                logger.error(f"Failed to process batch image {batch_image.id}: {e}")
+                batch_image.status = 'FAILED'
+                batch_image.error_message = str(e)
+                batch_image.processed_at = timezone.now()
+                batch_image.processing_time_seconds = time.time() - start_time
+                batch_image.save()
+                
+                failed_count += 1
+        
+        # Update session status
+        session.processed_images = processed_count
+        session.failed_images = failed_count
+        session.completed_at = timezone.now()
+        
+        if failed_count == 0:
+            session.status = 'COMPLETED'
+        elif processed_count == 0:
+            session.status = 'FAILED'
+        else:
+            session.status = 'PARTIAL'
+        
+        session.save()
+        
+        logger.info(f"Batch processing completed for session {session_id}: {processed_count} successful, {failed_count} failed")
+        
+    except Exception as e:
+        logger.error(f"Batch processing failed for session {session_id}: {e}")
+        try:
+            session = MeasurementSession.objects.get(id=session_id)
+            session.status = 'FAILED'
+            session.completed_at = timezone.now()
+            session.save()
+        except:
+            pass
+
+
+# Async version (requires Celery)
+try:
+    from celery import shared_task
+    
+    @shared_task
+    def process_batch_images(session_id, form_data):
+        """Asynchronous task to process batch images"""
+        process_batch_images_sync(session_id, form_data)
+        
+except ImportError:
+    # Celery not available, use sync processing
+    def process_batch_images(session_id, form_data):
+        """Fallback to sync processing"""
+        process_batch_images_sync(session_id, form_data)
+
+
+@login_required
+def batch_sessions_view(request):
+    """View to list all batch processing sessions for the user"""
+    sessions = MeasurementSession.objects.filter(user=request.user).order_by('-created_at')
+    
+    context = {
+        'sessions': sessions,
+        'page_title': 'Batch Processing Sessions'
+    }
+    return render(request, 'measurements/batch_sessions.html', context)
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def retry_failed_images(request, session_id):
+    """API endpoint to retry processing failed images in a batch"""
+    try:
+        session = MeasurementSession.objects.get(id=session_id, user=request.user)
+        failed_images = BatchImageUpload.objects.filter(session=session, status='FAILED')
+        
+        if not failed_images.exists():
+            return Response({
+                'success': False,
+                'message': 'No failed images to retry'
+            })
+        
+        # Reset failed images to pending
+        failed_images.update(status='PENDING', error_message='', processed_at=None)
+        
+        # Update session status
+        session.status = 'PENDING'
+        session.failed_images = 0
+        session.save()
+        
+        # Restart processing
+        form_data = {
+            'use_advanced_ai': request.data.get('use_advanced_ai', True),
+            'reference_length_cm': request.data.get('reference_length_cm')
+        }
+        
+        try:
+            process_batch_images.delay(session.id, form_data)
+        except:
+            process_batch_images_sync(session.id, form_data)
+        
+        return Response({
+            'success': True,
+            'message': f'Retrying {failed_images.count()} failed images'
+        })
+        
+    except MeasurementSession.DoesNotExist:
+        return Response({
+            'error': 'Session not found'
+        }, status=status.HTTP_404_NOT_FOUND)

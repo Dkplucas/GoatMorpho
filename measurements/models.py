@@ -192,6 +192,17 @@ class MeasurementSession(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     session_name = models.CharField(max_length=200)
+    goat = models.ForeignKey(Goat, on_delete=models.CASCADE, null=True, blank=True)
+    total_images = models.PositiveIntegerField(default=0)
+    processed_images = models.PositiveIntegerField(default=0)
+    failed_images = models.PositiveIntegerField(default=0)
+    status = models.CharField(max_length=20, choices=[
+        ('PENDING', 'Pending'),
+        ('PROCESSING', 'Processing'),
+        ('COMPLETED', 'Completed'),
+        ('FAILED', 'Failed'),
+        ('PARTIAL', 'Partially Completed')
+    ], default='PENDING')
     created_at = models.DateTimeField(auto_now_add=True)
     completed_at = models.DateTimeField(null=True, blank=True)
     
@@ -199,7 +210,67 @@ class MeasurementSession(models.Model):
         ordering = ['-created_at']
         indexes = [
             models.Index(fields=['user', '-created_at']),
+            models.Index(fields=['status']),
         ]
     
     def __str__(self):
         return f"{self.session_name} - {self.user.username}"
+
+    @property
+    def progress_percentage(self):
+        """Calculate processing progress as percentage"""
+        if self.total_images == 0:
+            return 0
+        return (self.processed_images + self.failed_images) / self.total_images * 100
+
+    @property
+    def success_rate(self):
+        """Calculate success rate as percentage"""
+        total_processed = self.processed_images + self.failed_images
+        if total_processed == 0:
+            return 0
+        return self.processed_images / total_processed * 100
+
+
+class BatchImageUpload(models.Model):
+    """Model to track individual images in a batch upload session"""
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    session = models.ForeignKey(MeasurementSession, on_delete=models.CASCADE, related_name='batch_images')
+    original_filename = models.CharField(max_length=255)
+    image_file = models.ImageField(upload_to='goat_images/batch/')
+    order_index = models.PositiveIntegerField(default=0, help_text="Order in which image was uploaded")
+    
+    # Processing status
+    status = models.CharField(max_length=20, choices=[
+        ('PENDING', 'Pending'),
+        ('PROCESSING', 'Processing'),
+        ('COMPLETED', 'Completed'),
+        ('FAILED', 'Failed')
+    ], default='PENDING')
+    
+    # Result if processed successfully
+    measurement = models.OneToOneField(
+        'MorphometricMeasurement', 
+        on_delete=models.SET_NULL, 
+        null=True, 
+        blank=True,
+        related_name='batch_upload'
+    )
+    
+    # Error information if failed
+    error_message = models.TextField(blank=True, null=True)
+    
+    # Processing metadata
+    processing_time_seconds = models.FloatField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    processed_at = models.DateTimeField(null=True, blank=True)
+    
+    class Meta:
+        ordering = ['session', 'order_index']
+        indexes = [
+            models.Index(fields=['session', 'status']),
+            models.Index(fields=['status']),
+        ]
+    
+    def __str__(self):
+        return f"{self.original_filename} in {self.session.session_name}"

@@ -1,0 +1,272 @@
+{% extends 'measurements/base.html' %}
+
+{% block title %}Batch Upload - Multiple Images{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col-md-10 offset-md-1">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h1>🚀 Batch Upload - Multiple Images</h1>
+      <div>
+        <a href="{% url 'measurements:upload_image' %}" class="btn btn-outline-secondary">
+          📤 Single Upload
+        </a>
+        <a href="{% url 'measurements:batch_sessions' %}" class="btn btn-outline-info">
+          📊 View Sessions
+        </a>
+      </div>
+    </div>
+
+    <div class="alert alert-info">
+      <strong>💡 Batch Processing Benefits:</strong>
+      <ul class="mb-0 mt-2">
+        <li><strong>Higher Accuracy:</strong> Multiple angles provide better measurement estimates</li>
+        <li><strong>Ensemble AI:</strong> Advanced algorithms combine results from all images</li>
+        <li><strong>Automated Processing:</strong> Upload multiple images and let our AI do the work</li>
+        <li><strong>Quality Assessment:</strong> Automatic detection of best images for measurements</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-body">
+        <form method="post" enctype="multipart/form-data" id="batchUploadForm">
+          {% csrf_token %}
+
+          <div class="row">
+            <div class="col-md-6">
+              <h5 class="mb-3">🐐 Goat Information</h5>
+              
+              <div class="mb-3">
+                {{ form.goat.label_tag }}
+                {{ form.goat }}
+                <div class="form-text">Select an existing goat or leave blank to create a new one</div>
+                {% if form.goat.errors %}
+                  <div class="text-danger">{{ form.goat.errors.0 }}</div>
+                {% endif %}
+              </div>
+
+              <div class="mb-3" id="newGoatFields">
+                {{ form.goat_name.label_tag }}
+                {{ form.goat_name }}
+                {% if form.goat_name.errors %}
+                  <div class="text-danger">{{ form.goat_name.errors.0 }}</div>
+                {% endif %}
+              </div>
+
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  {{ form.breed.label_tag }}
+                  {{ form.breed }}
+                  {% if form.breed.errors %}
+                    <div class="text-danger">{{ form.breed.errors.0 }}</div>
+                  {% endif %}
+                </div>
+                <div class="col-md-6 mb-3">
+                  {{ form.sex.label_tag }}
+                  {{ form.sex }}
+                  {% if form.sex.errors %}
+                    <div class="text-danger">{{ form.sex.errors.0 }}</div>
+                  {% endif %}
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  {{ form.age_months.label_tag }}
+                  {{ form.age_months }}
+                  {% if form.age_months.errors %}
+                    <div class="text-danger">{{ form.age_months.errors.0 }}</div>
+                  {% endif %}
+                </div>
+                <div class="col-md-6 mb-3">
+                  {{ form.weight_kg.label_tag }}
+                  {{ form.weight_kg }}
+                  {% if form.weight_kg.errors %}
+                    <div class="text-danger">{{ form.weight_kg.errors.0 }}</div>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <h5 class="mb-3">📸 Image Upload</h5>
+              
+              <div class="mb-3">
+                {{ form.images.label_tag }}
+                {{ form.images }}
+                <div class="form-text">{{ form.images.help_text }}</div>
+                {% if form.images.errors %}
+                  <div class="text-danger">{{ form.images.errors.0 }}</div>
+                {% endif %}
+              </div>
+
+              <div id="imagePreview" class="mb-3" style="display: none;">
+                <h6>📋 Selected Images:</h6>
+                <div id="imageList" class="d-flex flex-wrap gap-2"></div>
+              </div>
+
+              <div class="mb-3">
+                {{ form.reference_length_cm.label_tag }}
+                <div class="input-group">
+                  {{ form.reference_length_cm }}
+                  <span class="input-group-text">cm</span>
+                </div>
+                <div class="form-text">
+                  Optional: Length of a known object in the images for scale reference
+                </div>
+                {% if form.reference_length_cm.errors %}
+                  <div class="text-danger">{{ form.reference_length_cm.errors.0 }}</div>
+                {% endif %}
+              </div>
+
+              <div class="mb-3">
+                {{ form.session_name.label_tag }}
+                {{ form.session_name }}
+                <div class="form-text">Optional: Custom name for this batch processing session</div>
+                {% if form.session_name.errors %}
+                  <div class="text-danger">{{ form.session_name.errors.0 }}</div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+
+          <hr>
+
+          <div class="row">
+            <div class="col-md-6">
+              <h5 class="mb-3">⚙️ Processing Options</h5>
+              
+              <div class="form-check mb-3">
+                {{ form.use_advanced_ai }}
+                <label class="form-check-label" for="{{ form.use_advanced_ai.id_for_label }}">
+                  <strong>Use Advanced AI Processing</strong>
+                  <div class="form-text">
+                    Enable ensemble learning, uncertainty quantification, and breed-specific models
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="card bg-light">
+                <div class="card-body">
+                  <h6 class="card-title">🎯 Processing Pipeline</h6>
+                  <small class="text-muted">
+                    <ol class="mb-0">
+                      <li>Image quality assessment</li>
+                      <li>Multi-angle pose detection</li>
+                      <li>Ensemble measurement extraction</li>
+                      <li>Statistical aggregation</li>
+                      <li>Confidence scoring</li>
+                    </ol>
+                  </small>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {% if form.non_field_errors %}
+            <div class="alert alert-danger">
+              {{ form.non_field_errors.0 }}
+            </div>
+          {% endif %}
+
+          <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+            <button type="button" class="btn btn-secondary me-md-2" onclick="window.history.back()">
+              ← Cancel
+            </button>
+            <button type="submit" class="btn btn-primary btn-lg" id="submitBtn">
+              <span id="submitText">🚀 Start Batch Processing</span>
+              <span id="submitSpinner" class="spinner-border spinner-border-sm ms-2" style="display: none;"></span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const goatSelect = document.getElementById('id_goat');
+    const newGoatFields = document.getElementById('newGoatFields');
+    const imagesInput = document.getElementById('id_images');
+    const imagePreview = document.getElementById('imagePreview');
+    const imageList = document.getElementById('imageList');
+    const submitBtn = document.getElementById('submitBtn');
+    const submitText = document.getElementById('submitText');
+    const submitSpinner = document.getElementById('submitSpinner');
+
+    // Toggle new goat fields visibility
+    function toggleNewGoatFields() {
+        if (goatSelect.value === '') {
+            newGoatFields.style.display = 'block';
+            document.getElementById('id_goat_name').required = true;
+        } else {
+            newGoatFields.style.display = 'none';
+            document.getElementById('id_goat_name').required = false;
+        }
+    }
+
+    goatSelect.addEventListener('change', toggleNewGoatFields);
+    toggleNewGoatFields(); // Initial call
+
+    // Image preview functionality
+    imagesInput.addEventListener('change', function() {
+        const files = Array.from(this.files);
+        
+        if (files.length > 0) {
+            imagePreview.style.display = 'block';
+            imageList.innerHTML = '';
+            
+            files.forEach((file, index) => {
+                const imageItem = document.createElement('div');
+                imageItem.className = 'text-center';
+                imageItem.style.width = '80px';
+                
+                const img = document.createElement('img');
+                img.style.width = '60px';
+                img.style.height = '60px';
+                img.style.objectFit = 'cover';
+                img.className = 'rounded border';
+                
+                const fileName = document.createElement('small');
+                fileName.className = 'text-muted d-block text-truncate';
+                fileName.style.fontSize = '10px';
+                fileName.textContent = file.name;
+                
+                // Create thumbnail
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+                
+                imageItem.appendChild(img);
+                imageItem.appendChild(fileName);
+                imageList.appendChild(imageItem);
+            });
+        } else {
+            imagePreview.style.display = 'none';
+        }
+    });
+
+    // Form submission handling
+    document.getElementById('batchUploadForm').addEventListener('submit', function() {
+        submitBtn.disabled = true;
+        submitText.textContent = 'Processing...';
+        submitSpinner.style.display = 'inline-block';
+    });
+
+    // Auto-generate session name if not provided
+    const sessionNameInput = document.getElementById('id_session_name');
+    document.getElementById('batchUploadForm').addEventListener('submit', function() {
+        if (!sessionNameInput.value.trim()) {
+            const goatName = goatSelect.selectedOptions[0]?.text || document.getElementById('id_goat_name').value || 'Unknown Goat';
+            const timestamp = new Date().toLocaleString();
+            sessionNameInput.value = `Batch upload for ${goatName} - ${timestamp}`;
+        }
+    });
+});
+</script>
+{% endblock %}
