@@ -200,29 +200,58 @@ EMAIL_PORT = int(os.environ.get('EMAIL_PORT', '587'))
 EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS', 'True').lower() == 'true'
 DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', 'noreply@goatmorpho.info')
 
-# Redis/Celery settings (if you use them)
+# Enhanced Redis Configuration with Production-Ready Settings
 REDIS_HOST = os.environ.get('REDIS_HOST', '127.0.0.1')
-REDIS_PORT = 6379
+REDIS_PORT = int(os.environ.get('REDIS_PORT', '6379'))
+REDIS_PASSWORD = os.environ.get('REDIS_PASSWORD', '')
+REDIS_DB = int(os.environ.get('REDIS_DB', '1'))
+REDIS_TIMEOUT = int(os.environ.get('REDIS_TIMEOUT', '5'))
+REDIS_MAX_CONNECTIONS = int(os.environ.get('REDIS_MAX_CONNECTIONS', '50'))
 
-# Cache Configuration
+# Build Redis URL with authentication
+if REDIS_PASSWORD:
+    REDIS_URL = f"redis://:{REDIS_PASSWORD}@{REDIS_HOST}:{REDIS_PORT}/{REDIS_DB}"
+else:
+    REDIS_URL = f"redis://{REDIS_HOST}:{REDIS_PORT}/{REDIS_DB}"
+
+# Production-Ready Cache Configuration
 try:
     import django_redis
     CACHES = {
         'default': {
             'BACKEND': 'django_redis.cache.RedisCache',
-            'LOCATION': f'redis://{REDIS_HOST}:{REDIS_PORT}/1',
+            'LOCATION': REDIS_URL,
             'OPTIONS': {
                 'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+                'CONNECTION_POOL_KWARGS': {
+                    'max_connections': REDIS_MAX_CONNECTIONS,
+                    'retry_on_timeout': True,
+                    'socket_connect_timeout': REDIS_TIMEOUT,
+                    'socket_timeout': REDIS_TIMEOUT,
+                    'health_check_interval': 30,
+                },
+                'SERIALIZER': 'django_redis.serializers.json.JSONSerializer',
+                'COMPRESSOR': 'django_redis.compressors.zlib.ZlibCompressor',
             },
             'KEY_PREFIX': 'goatmorpho',
-            'TIMEOUT': 300,  # 5 minutes default
+            'VERSION': 1,
+            'TIMEOUT': int(os.environ.get('CACHE_TIMEOUT', '300')),
         }
     }
-    # Session Configuration
-    SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
-    SESSION_CACHE_ALIAS = 'default'
+    
+    # Hybrid Session Configuration (Redis + Database fallback)
+    if os.environ.get('REDIS_SESSIONS_ONLY', 'False').lower() == 'true':
+        SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+        SESSION_CACHE_ALIAS = 'default'
+    else:
+        # Safer: Cache-backed database sessions
+        SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
+        SESSION_SAVE_EVERY_REQUEST = False
+    
+    SESSION_COOKIE_AGE = int(os.environ.get('SESSION_COOKIE_AGE', '1209600'))  # 2 weeks
+    
 except ImportError:
-    # Fallback to local memory cache if Redis is not available
+    # Enhanced fallback configuration
     CACHES = {
         'default': {
             'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
@@ -234,6 +263,9 @@ except ImportError:
             }
         }
     }
+    # Use database sessions as fallback
+    SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+    SESSION_SAVE_EVERY_REQUEST = False
 
 # CV Processing URL
 CV_PROCESSING_URL = os.environ.get('CV_PROCESSING_URL', 'http://127.0.0.1:8001')
