@@ -312,23 +312,46 @@ python manage.py createsuperuser
 
 # Setup Gunicorn service
 print_status "Setting up Gunicorn service..."
+
+# Create necessary directories for Gunicorn
+sudo mkdir -p /run/gunicorn
+sudo mkdir -p /var/log/gunicorn
+sudo chown $USER:$USER /run/gunicorn
+sudo chown $USER:$USER /var/log/gunicorn
+sudo chmod 755 /run/gunicorn
+
 sudo tee /etc/systemd/system/goatmorpho.service > /dev/null << EOF
 [Unit]
 Description=GoatMorpho Gunicorn daemon
 After=network.target
+Requires=redis-server.service
+After=redis-server.service
 
 [Service]
+Type=notify
 User=$USER
 Group=$USER
+RuntimeDirectory=gunicorn
+RuntimeDirectoryMode=755
 WorkingDirectory=$APP_DIR
 Environment="PATH=$APP_DIR/venv/bin"
 EnvironmentFile=$APP_DIR/.env
 ExecStart=$APP_DIR/venv/bin/gunicorn \\
+    --name goatmorpho \\
     --workers 3 \\
+    --max-requests 1000 \\
     --timeout 120 \\
-    --bind unix:$APP_DIR/goatmorpho.sock \\
+    --bind unix:/run/gunicorn/sock \\
+    --user $USER \\
+    --group $USER \\
+    --log-level info \\
+    --log-file /var/log/gunicorn/gunicorn.log \\
+    --access-logfile /var/log/gunicorn/access.log \\
+    --error-logfile /var/log/gunicorn/error.log \\
     goat_morpho.wsgi:application
 ExecReload=/bin/kill -s HUP \$MAINPID
+KillMode=mixed
+TimeoutStopSec=5
 Restart=on-failure
 RestartSec=5
 
@@ -366,11 +389,14 @@ server {
     
     location / {
         include proxy_params;
-        proxy_pass http://unix:$APP_DIR/goatmorpho.sock;
+        proxy_pass http://unix:/run/gunicorn/sock;
         proxy_set_header Host \$host;
         proxy_set_header X-Real-IP \$remote_addr;
         proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto \$scheme;
+        proxy_connect_timeout 120s;
+        proxy_send_timeout 120s;
+        proxy_read_timeout 120s;
     }
 }
 EOF
