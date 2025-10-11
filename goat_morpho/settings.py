@@ -1,8 +1,12 @@
 import os
 import sys
 import io
+from dotenv import load_dotenv
 from pathlib import Path
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
+
+# Load environment variables from .env file
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,7 +24,7 @@ DEBUG = os.environ.get('DJANGO_DEBUG', 'False').lower() == 'true'
 ALLOWED_HOSTS = [
     'goatmorpho.info',  # Your primary domain
     'www.goatmorpho.info',  # Optional: if you use www subdomain
-    '130.61.39.212',  # Your server IP
+    '130.61.228.97',  # Your server IP
     'localhost',  # For local access
     '127.0.0.1',  # For local access
 ]
