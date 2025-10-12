@@ -163,33 +163,57 @@
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav me-auto">
             <li class="nav-item">
-              <a class="nav-link" href="{% url 'measurements:home' %}">Home</a>
+              <a class="nav-link" href="{% url 'measurements:home' %}">
+                <i class="fas fa-home"></i> Home
+              </a>
             </li>
             {% if user.is_authenticated %}
             <li class="nav-item">
-              <a class="nav-link" href="{% url 'measurements:dashboard' %}"
-                >Dashboard</a
-              >
+              <a class="nav-link" href="{% url 'measurements:dashboard' %}">
+                <i class="fas fa-tachometer-alt"></i> Dashboard
+              </a>
             </li>
             <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" id="uploadDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Upload
+                <i class="fas fa-cloud-upload-alt"></i> Upload & Process
               </a>
               <ul class="dropdown-menu">
                 <li>
                   <a class="dropdown-item" href="{% url 'measurements:upload_image' %}">
-                    <i class="fas fa-image"></i> Single Image
+                    <i class="fas fa-image"></i> Single Image Analysis
                   </a>
                 </li>
                 <li>
                   <a class="dropdown-item" href="{% url 'measurements:batch_upload' %}">
-                    <i class="fas fa-images"></i> Multiple Images (Batch)
+                    <i class="fas fa-images"></i> Batch Processing
                   </a>
                 </li>
                 <li><hr class="dropdown-divider" /></li>
                 <li>
                   <a class="dropdown-item" href="{% url 'measurements:batch_sessions' %}">
                     <i class="fas fa-history"></i> Processing History
+                  </a>
+                </li>
+              </ul>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="analyticsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="fas fa-chart-line"></i> Analytics & Reports
+              </a>
+              <ul class="dropdown-menu">
+                <li>
+                  <a class="dropdown-item" href="{% url 'measurements:export_options' %}">
+                    <i class="fas fa-file-excel"></i> Export Data
+                  </a>
+                </li>
+                <li>
+                  <a class="dropdown-item" href="#" onclick="fetchStatistics()">
+                    <i class="fas fa-chart-bar"></i> Statistics Overview
+                  </a>
+                </li>
+                <li>
+                  <a class="dropdown-item" href="#" onclick="fetchAIInsights()">
+                    <i class="fas fa-brain"></i> AI Insights
                   </a>
                 </li>
               </ul>
@@ -302,7 +326,143 @@
       </div>
     </footer>
 
+    <!-- Analytics Modal -->
+    <div class="modal fade" id="analyticsModal" tabindex="-1" aria-labelledby="analyticsModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="analyticsModalLabel">Analytics Data</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body" id="analyticsModalBody">
+            <div class="text-center">
+              <div class="spinner-border" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+      function fetchStatistics() {
+        const modal = new bootstrap.Modal(document.getElementById('analyticsModal'));
+        const modalTitle = document.getElementById('analyticsModalLabel');
+        const modalBody = document.getElementById('analyticsModalBody');
+        
+        modalTitle.textContent = 'Statistics Overview';
+        modalBody.innerHTML = `
+          <div class="text-center">
+            <div class="spinner-border" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </div>
+        `;
+        modal.show();
+        
+        fetch('/api/statistics/')
+          .then(response => response.json())
+          .then(data => {
+            modalBody.innerHTML = `
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="card">
+                    <div class="card-body text-center">
+                      <h5 class="card-title">Total Measurements</h5>
+                      <h2 class="text-primary">${data.total_measurements || 0}</h2>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="card">
+                    <div class="card-body text-center">
+                      <h5 class="card-title">Total Goats</h5>
+                      <h2 class="text-success">${data.total_goats || 0}</h2>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6 mt-3">
+                  <div class="card">
+                    <div class="card-body text-center">
+                      <h5 class="card-title">Average Body Length</h5>
+                      <h3 class="text-info">${data.avg_body_length ? data.avg_body_length.toFixed(2) + ' cm' : 'N/A'}</h3>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6 mt-3">
+                  <div class="card">
+                    <div class="card-body text-center">
+                      <h5 class="card-title">Average Height</h5>
+                      <h3 class="text-warning">${data.avg_height ? data.avg_height.toFixed(2) + ' cm' : 'N/A'}</h3>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            `;
+          })
+          .catch(error => {
+            modalBody.innerHTML = `
+              <div class="alert alert-danger" role="alert">
+                <i class="fas fa-exclamation-triangle"></i> Error loading statistics: ${error.message}
+              </div>
+            `;
+          });
+      }
+      
+      function fetchAIInsights() {
+        const modal = new bootstrap.Modal(document.getElementById('analyticsModal'));
+        const modalTitle = document.getElementById('analyticsModalLabel');
+        const modalBody = document.getElementById('analyticsModalBody');
+        
+        modalTitle.textContent = 'AI Insights';
+        modalBody.innerHTML = `
+          <div class="text-center">
+            <div class="spinner-border" role="status">
+              <span class="visually-hidden">Loading AI analysis...</span>
+            </div>
+          </div>
+        `;
+        modal.show();
+        
+        fetch('/api/ai/insights/')
+          .then(response => response.json())
+          .then(data => {
+            let insightsHtml = '';
+            if (data.insights && data.insights.length > 0) {
+              insightsHtml = data.insights.map(insight => `
+                <div class="card mb-3">
+                  <div class="card-body">
+                    <h6 class="card-title"><i class="fas fa-lightbulb text-warning"></i> ${insight.title}</h6>
+                    <p class="card-text">${insight.description}</p>
+                    ${insight.recommendation ? `<p class="text-muted"><i class="fas fa-arrow-right"></i> ${insight.recommendation}</p>` : ''}
+                  </div>
+                </div>
+              `).join('');
+            } else {
+              insightsHtml = `
+                <div class="alert alert-info" role="alert">
+                  <i class="fas fa-info-circle"></i> No insights available yet. Upload more measurement data to get AI-powered recommendations.
+                </div>
+              `;
+            }
+            modalBody.innerHTML = insightsHtml;
+          })
+          .catch(error => {
+            modalBody.innerHTML = `
+              <div class="alert alert-danger" role="alert">
+                <i class="fas fa-exclamation-triangle"></i> Error loading AI insights: ${error.message}
+              </div>
+            `;
+          });
+      }
+    </script>
+    
     {% block extra_js %}{% endblock %}
   </body>
 </html>
