@@ -110,11 +110,11 @@ WSGI_APPLICATION = 'goat_morpho.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('DB_NAME', 'goat_morpho'),
-        'USER': os.environ.get('DB_USER', 'goat_morpho_user'),
-        'PASSWORD': os.environ.get('DB_PASSWORD', '123456789'),
-        'HOST': os.environ.get('DB_HOST', 'localhost'),
-        'PORT': os.environ.get('DB_PORT', '5432'),
+        'NAME': 'goat_morpho',
+        'USER': 'goat_morpho_user',
+        'PASSWORD': '123456789',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 
