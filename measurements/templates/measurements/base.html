@@ -102,6 +102,18 @@
         background-color: #f8f9fa;
         color: #000000;
       }
+      .footer-custom-white {
+        background-color: #ffffff !important;
+        border-top: 1px solid #e9ecef;
+        box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+        color: #333333 !important;
+      }
+      .footer-custom-white span {
+        color: #333333 !important;
+      }
+      .footer-custom-white p {
+        color: #666666 !important;
+      }
       .navbar-nav .dropdown-toggle .fas.fa-user-circle {
         font-size: 2em;
       }
@@ -273,7 +285,7 @@
       {% endfor %} {% endif %} {% block content %} {% endblock %}
     </main>
 
-    <footer class="text-center text-white py-4 mt-5" style="background-color: #fb8441;">
+    <footer class="text-center text-dark py-4 mt-5 footer-custom-white">
       <div class="container">
         <div class="d-flex justify-content-center align-items-center mb-2">
           <img
@@ -282,7 +294,7 @@
             height="24"
             class="me-2"
           />
-          <span>GoatMorpho</span>
+          <span class="fw-bold">GoatMorpho</span>
         </div>
         <p class="mb-0">
           &copy; 2025 GoatMorpho - Automated Goat Morphometric Analysis
