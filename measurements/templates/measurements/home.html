@@ -3,9 +3,18 @@
 {% block title %}Welcome to GoatMorpho{%endblock %} 
 
 {% block content %}
-<!-- Hero Slide Section with Amber Glow Background -->
-<div class="hero-slide position-relative overflow-hidden min-vh-100 d-flex align-items-center">
-  <div class="container py-5 position-relative z-1">
+<!-- Full Page Amber Glow Background -->
+<div class="min-vh-100 w-100 position-relative" style="background-color: white;">
+  <!-- Amber Glow Background -->
+  <div class="position-absolute top-0 start-0 w-100 h-100" style="
+    background-image: radial-gradient(125% 125% at 50% 90%, #ffffff 40%, #f59e0b 100%);
+    background-size: 100% 100%;
+    z-index: 0;
+  "></div>
+  
+  <!-- Hero Slide Section -->
+  <div class="hero-slide position-relative overflow-hidden min-vh-100 d-flex align-items-center">
+    <div class="container py-5 position-relative" style="z-index: 1;">
     <div class="row align-items-center">
       <div class="col-lg-8 text-start">
         <h1 class="display-2 fw-bold text-dark mb-4" style="text-shadow: 0 2px 4px rgba(0,0,0,0.05);">GoatMorpho</h1>
@@ -36,16 +45,9 @@
       </div>
     </div>
   </div>
-  <!-- Amber Glow Background -->
-  <div class="position-absolute top-0 start-0 w-100 h-100" style="
-    background-image: radial-gradient(125% 125% at 50% 90%, #ffffff 40%, #f59e0b 100%);
-    background-size: 100% 100%;
-    z-index: -1;
-  "></div>
-</div>
 
-<!-- GoatMorpho Section -->
-<div class="container mt-5 py-5">
+  <!-- GoatMorpho Section -->
+  <div class="container mt-5 py-5 position-relative" style="z-index: 1;">
   <div class="row">
     <div class="col-md-12 text-center">
       <h1 class="display-4 mb-5" style="color: #92400e; font-weight: 600;">Why choose GoatMorpho?</h1>
@@ -269,5 +271,7 @@
       </a>
     {% endif %}
   </div>
+  
 </div>
+<!-- End of Full Page Background -->
 {% endblock %}
