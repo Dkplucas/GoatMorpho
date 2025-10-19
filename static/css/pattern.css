@@ -1,0 +1,18 @@
+/* In your static/css/patterns.css */
+.pattern-grid-lines {
+  background: #ffffff;
+  background-image: 
+    linear-gradient(to right, #f0f0f0 1px, transparent 1px),
+    linear-gradient(to bottom, #f0f0f0 1px, transparent 1px);
+  background-size: 96px 64px;
+}
+
+.pattern-dots {
+  background: #ffffff;
+  background-image: radial-gradient(#3b82f6 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+.pattern-gradient-blend {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
