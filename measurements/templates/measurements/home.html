@@ -4,12 +4,28 @@
 {% block title %}Welcome to GoatMorpho{% endblock %} 
 
 {% block content %}
-<link rel="stylesheet" href="{% static 'css/pattern.css' %}">
-<div class="pattern-grid-lines min-vh-100">
+<link rel="stylesheet" href="{% static 'css/pattern.css' %}?v=1.0">
+<style>
+  .content-overlay {
+    position: relative;
+    z-index: 1;
+  }
+  /* Fallback styles in case CSS file doesn't load */
+  .pattern-amber-glow {
+    background: #ffffff;
+    background-image: radial-gradient(125% 125% at 50% 90%, #ffffff 40%, #f59e0b 100%);
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    min-height: 100vh;
+    width: 100%;
+    position: relative;
+  }
+</style>
+<div class="pattern-amber-glow">
 
         <!-- Hero Slide Section with Amber Glow Background -->
-        <div class="hero-slide position-relative overflow-hidden min-vh-100 d-flex align-items-center">
-            <div class="container py-5 position-relative z-1">
+        <div class="hero-slide position-relative overflow-hidden min-vh-100 d-flex align-items-center content-overlay">
+            <div class="container py-5 position-relative" style="z-index: 1;">
                 <div class="row align-items-center">
                     <div class="col-lg-8 text-start">
                         <h1 class="display-2 fw-bold text-dark mb-4" style="text-shadow: 0 2px 4px rgba(0,0,0,0.05);">GoatMorpho</h1>
@@ -43,7 +59,7 @@
         </div>
 
         <!-- GoatMorpho Section -->
-        <div class="container mt-5 py-5">
+        <div class="container mt-5 py-5 position-relative content-overlay">>
             <div class="row">
                 <div class="col-md-12 text-center">
                     <h1 class="display-4 mb-5" style="color: #92400e; font-weight: 600;">Why choose GoatMorpho?</h1>
