@@ -380,14 +380,17 @@ def get_user_measurement_stats(user_id):
             goat__owner_id=user_id
         ).count()
         
+        # Convert QuerySet to list to make it JSON serializable
+        recent_measurements = list(MorphometricMeasurement.objects.filter(
+            goat__owner_id=user_id
+        ).order_by('-measurement_date')[:5].values(
+            'id', 'goat__name', 'measurement_date', 'confidence_score'
+        ))
+        
         stats = {
             'total_goats': user_goats.count(),
             'total_measurements': total_measurements,
-            'recent_measurements': MorphometricMeasurement.objects.filter(
-                goat__owner_id=user_id
-            ).order_by('-measurement_date')[:5].values(
-                'id', 'goat__name', 'measurement_date', 'confidence_score'
-            )
+            'recent_measurements': recent_measurements
         }
         
         # Cache for 5 minutes
