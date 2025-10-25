@@ -411,10 +411,7 @@ def measurement_dashboard(request):
         'goats': user_goats,
         'recent_measurements': recent_measurements,
         'total_goats': stats['total_goats'],
-        'total_measurements': stats['total_measurements'],
-        'total_measurements': MorphometricMeasurement.objects.filter(
-            goat__owner=request.user
-        ).count()
+        'total_measurements': stats['total_measurements']
     }
     
     return render(request, 'measurements/dashboard.html', context)
