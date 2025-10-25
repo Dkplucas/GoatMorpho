@@ -132,7 +132,7 @@
 
           <hr>
 
-          <div class="row">
+          <div class="row mb-4">
             <div class="col-md-6">
               <h5 class="mb-3">⚙️ Processing Options</h5>
               
@@ -148,7 +148,7 @@
             </div>
 
             <div class="col-md-6">
-              <div class="card bg-light">
+              <div class="card bg-light h-100">
                 <div class="card-body">
                   <h6 class="card-title">🎯 Processing Pipeline</h6>
                   <small class="text-muted">
@@ -166,16 +166,16 @@
           </div>
 
           {% if form.non_field_errors %}
-            <div class="alert alert-danger">
+            <div class="alert alert-danger mb-4">
               {{ form.non_field_errors.0 }}
             </div>
           {% endif %}
 
-          <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-            <button type="button" class="btn btn-secondary me-md-2" onclick="window.history.back()">
+          <div class="d-flex justify-content-end gap-3">
+            <button type="button" class="btn btn-outline-secondary" onclick="window.history.back()">
               ← Cancel
             </button>
-            <button type="submit" class="btn btn-primary btn-lg" id="submitBtn">
+            <button type="submit" class="btn btn-primary btn-lg px-4" id="submitBtn">
               <span id="submitText">🚀 Start Batch Processing</span>
               <span id="submitSpinner" class="spinner-border spinner-border-sm ms-2" style="display: none;"></span>
             </button>
